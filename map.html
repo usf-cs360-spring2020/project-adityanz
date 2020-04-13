@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<link href="style.css" rel="stylesheet" type="text/css">
+<title>MUNI</title>
+</head>
+
+<body>
+<!--
+  hard-code the svg and various g layers so that even if the streets are loaded
+  and drawn last, they will still show up behind the symbols
+-->
+<select id="dropdown"></select>
+
+<figure>
+  <svg width="960" height="600" id="vis">
+    <g id="basemap"></g>
+
+    <!-- turn off pointer events for certain groups -->
+    <g id="streets" pointer-events="none"></g>
+    <g id="outline" pointer-events="none"></g>
+
+    <g id="arrests"></g>
+    <g id="tooltip" pointer-events="none"></g>
+    <g id="details" pointer-events="none"></g>
+  </svg>
+
+  <figcaption>
+    Source: <a href="https://data.sfgov.org/City-Infrastructure/311-Cases/vw6y-z8j6/data">Data SF 311 Cases</a> (<a href="https://data.sfgov.org/Geographic-Locations-and-Boundaries/Analysis-Neighborhoods/p5b7-5n3h">Neighborhoods</a>, <a href="https://data.sfgov.org/Geographic-Locations-and-Boundaries/Streets-Active-and-Retired/3psu-pn9h">Streets</a>)
+  </figcaption>
+</figure>
+
+<script src="https://d3js.org/d3.v5.min.js"></script>
+
+<script>
+const urls = {
+  basemap: "https://data.sfgov.org/resource/xfcw-9evu.geojson",
+  streets: "https://data.sfgov.org/resource/hn5x-7sr8.geojson?$limit=8000",
+  muni: "https://data.sfgov.org/resource/9exe-acju.geojson"
+  // arrests: "https://data.sfgov.org/resource/nwbb-fxkq.json"
+};
+
+// calculate date range
+const end = d3.timeDay.floor(d3.timeDay.offset(new Date(), -1));
+const start = d3.timeDay.floor(d3.timeDay.offset(end, -7));
+const format = d3.timeFormat("%Y-%m-%dT%H:%M:%S");
+console.log(format(start), format(end));
+
+const svg = d3.select("body").select("svg#vis");
+
+const g = {
+  basemap: svg.select("g#basemap"),
+  streets: svg.select("g#streets"),
+  outline: svg.select("g#outline"),
+  muni: svg.select("g#muni"),
+  arrests: svg.select("g#arrests"),
+  tooltip: svg.select("g#tooltip"),
+  details: svg.select("g#details")
+};
+
+// setup tooltip (shows neighborhood name)
+const tip = g.tooltip.append("text").attr("id", "tooltip");
+tip.attr("text-anchor", "end");
+tip.attr("dx", -5);
+tip.attr("dy", -5);
+tip.style("visibility", "hidden");
+
+// add details widget
+// https://bl.ocks.org/mbostock/1424037
+const details = g.details.append("foreignObject")
+  .attr("id", "details")
+  .attr("width", 960)
+  .attr("height", 600)
+  .attr("x", 0)
+  .attr("y", 0);
+
+const body = details.append("xhtml:body")
+  .style("text-align", "left")
+  .style("background", "none")
+  .html("<p>N/A</p>");
+
+details.style("visibility", "hidden");
+
+// setup projection
+// https://github.com/d3/d3-geo#geoConicEqualArea
+const projection = d3.geoConicEqualArea();
+projection.parallels([37.692514, 37.840699]);
+projection.rotate([122, 0]);
+
+// setup path generator (note it is a GEO path, not a normal path)
+const path = d3.geoPath().projection(projection);
+
+d3.json(urls.basemap).then(function(json) {
+  // makes sure to adjust projection to fit all of our regions
+  projection.fitSize([960, 600], json);
+
+  // draw the land and neighborhood outlines
+  drawBasemap(json);
+
+  // now that projection has been set trigger loading the other files
+  // note that the actual order these files are loaded may differ
+
+  d3.json(urls.streets).then(drawStreets)
+  // d3.json(urls.muni).then(drawMuni)
+  d3.csv("311_Cases_Wrangled.csv").then(drawArrests);
+});
+
+function drawBasemap(json) {
+  console.log("basemap", json);
+
+  const basemap = g.basemap.selectAll("path.land")
+    .data(json.features)
+    .enter()
+    .append("path")
+    .attr("d", path)
+    .attr("class", "land");
+
+  const outline = g.outline.selectAll("path.neighborhood")
+      .data(json.features)
+      .enter()
+      .append("path")
+      .attr("d", path)
+      .attr("class", "neighborhood")
+      .each(function(d) {
+        // save selection in data for interactivity
+        // saves search time finding the right outline later
+        d.properties.outline = this;
+      });
+
+  // add highlight
+  basemap.on("mouseover.highlight", function(d) {
+    d3.select(d.properties.outline).raise();
+    d3.select(d.properties.outline).classed("active", true);
+  })
+  .on("mouseout.highlight", function(d) {
+    d3.select(d.properties.outline).classed("active", false);
+  });
+
+  // add tooltip
+  basemap.on("mouseover.tooltip", function(d) {
+    tip.text(d.properties.nhood);
+    tip.style("visibility", "visible");
+  })
+  .on("mousemove.tooltip", function(d) {
+    const coords = d3.mouse(g.basemap.node());
+    tip.attr("x", coords[0]);
+    tip.attr("y", coords[1]);
+  })
+  .on("mouseout.tooltip", function(d) {
+    tip.style("visibility", "hidden");
+  });
+}
+
+function drawStreets(json) {
+  console.log("streets", json);
+
+  const streets = json.features.filter(function(d) {
+    return d;
+  });
+
+
+  console.log("removed", json.features.length - streets.length, "inactive streets");
+
+  g.streets.selectAll("path.street")
+    .data(streets)
+    .enter()
+    .append("path")
+    .attr("d", path)
+    .attr("class", "street");
+}
+
+// function drawStreets(json) {
+//   console.log("streets", json);
+//
+//   // only show active streets
+//   const streets = json.features.filter(function(d) {
+//     return d.properties.active;
+//   });
+//
+//   console.log("removed", json.features.length - streets.length, "inactive streets");
+//
+//   g.streets.selectAll("path.street")
+//     .data(streets)
+//     .enter()
+//     .append("path")
+//     .attr("d", path)
+//     .attr("class", "street");
+//
+//     // add tooltip
+//     streets.on("mouseover.tooltip", function(d) {
+//       tip.text(d.properties.streets);
+//       tip.style("visibility", "visible");
+//     })
+//     .on("mousemove.tooltip", function(d) {
+//       const coords = d3.mouse(g.streets.node());
+//       tip.attr("x", coords[0]);
+//       tip.attr("y", coords[1]);
+//     })
+//     .on("mouseout.tooltip", function(d) {
+//       tip.style("visibility", "hidden");
+//     });
+// }
+
+
+// function drawMuni(json) {
+//   console.log("muni", json);
+//     const muni = json.features.filter(function(d) {
+//       return d.properties.active;
+//     });
+//
+//   g.muni.selectAll("path.muni")
+//     .data(muni)
+//     .enter()
+//     .append("path")
+//     .attr("d", path)
+//     .attr("class", "muni");
+// }
+
+let remover = '0';
+function drawArrests(json) {
+  console.log("arrests", json);
+
+  // loop through and add projected (x, y) coordinates
+  // (just makes our d3 code a bit more simple later)
+  json.forEach(function(d) {
+    const latitude = parseFloat(d.Latitude);
+    const longitude = parseFloat(d.Longitude);
+    const pixels = projection([longitude, latitude]);
+
+    d.x = pixels[0];
+    d.y = pixels[1];
+  });
+  console.log("og");
+
+  //
+
+
+      var dropdown_options = [
+        { value: "0",
+          text: "All" },
+      { value: "1",
+        text: "Supervisor District 1: Sandra Lee Fewer" },
+        { value: "2",
+        text: "Supervisor District 2: Catherine Stefani" },
+          { value: "3",
+          text: "Supervisor District 3: Aaron Peskin" },
+            { value: "4",
+            text: "Supervisor District 4: Gordon Mar" },
+              { value: "5",
+              text: "Supervisor District 5: Dean Preston" },
+                { value: "6",
+                text: "Supervisor District 6: Matt Haney" },
+                  { value: "7",
+                  text: "Supervisor District 7: Norman Yee" },
+                    { value: "8",
+                    text: "Supervisor District 8: Rafael Mandelman" },
+                      { value: "9",
+                      text: "Supervisor District 9: Hillary Ronen" },
+                        { value: "10",
+                        text: "Supervisor District 10: Shamann Walton" },
+      { value: "11",
+      text: "Supervisor District 11: Ahsha Safaí" }]
+
+        d3.select("#dropdown")
+          .selectAll("option")
+          .data(dropdown_options)
+          .enter()
+          .append("option")
+          .attr("value", function(option) { return option.value; })
+          .text(function(option) { return option.text; });
+
+    var dropDown = d3.select("#dropdown");
+    dropDown.on("change", function() {
+        // newly selected dataset includes downtown
+        d3.select("#downtown")
+          .property("checked", true);
+
+        checked = true;
+
+        selected_dataset = d3.event.target.value;
+        remover = selected_dataset.toString();
+        console.log(selected_dataset)
+        console.log("in add")
+          // symbols.remove()
+          // drawArrests(json)
+          symbols.filter(d=> d['Supervisor District'])
+          console.log(remover)
+          symbols.filter(d => d['Supervisor District'] != remover).remove();
+          console.log("in remove")
+    });
+
+
+    var symbols = g.arrests.selectAll("circle")
+        .data(json)
+        .enter()
+        .append("circle")
+        .attr("cx", d => d.x)
+        .attr("cy", d => d.y)
+        .attr("r", 5)
+        .attr("class", "symbol")
+        .style("fill","000000")
+      // symbols.filter(d => d['Supervisor District'] !== selected_dataset)
+
+          symbols.filter(d => d['Complaint Type Description'] === 'Pass').style("fill","FF0000")
+          symbols.filter(d => d['Complaint Type Description'] === 'Delay').style("fill","0000ff")
+          symbols.filter(d => d['Complaint Type Description'] === 'Discourtesy').style("fill","FF7F00");
+          symbols.filter(d => d['Complaint Type Description'] === 'NextMuni').style("fill","6a0dad");
+          console.log(remover)
+          if (remover != '0')
+          {
+            console.log(remover)
+            symbols.filter(d => d['Supervisor District'] != remover).remove();
+          }
+
+
+
+
+    symbols.on("mouseover", function(d) {
+      d3.select(this).raise();
+      d3.select(this).classed("active", true);
+
+
+        symbols.on("mouseout", function(d) {
+          d3.select(this).classed("active", false);
+          details.style("visibility", "hidden");
+        });
+
+
+    // use template literal for the detail table
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+    const html = `
+      <table border="0" cellspacing="0" cellpadding="2">
+      <tbody>
+        <tr>
+          <th>Case ID:</th>
+          <td>${d['Case ID']}</td>
+        </tr>
+        <tr>
+          <th>Date:</th>
+          <td>${new Date(d.Opened).toDateString()}</td>
+        </tr>
+        <tr>
+          <th>Time:</th>
+          <td>${new Date(d.Opened).toTimeString()}</td>
+        </tr>
+        <tr>
+          <th>Neighborhood:</th>
+          <td>${d['Neighborhood']}</td>
+        </tr>
+        <tr>
+          <th>Category:</th>
+          <td>${d['Category']}</td>
+        </tr>
+        <tr>
+          <th>Description:</th>
+          <td>${d['Request Details']}</td>
+        </tr>
+        <tr>
+          <th>Source:</th>
+          <td>${d['Source']}</td>
+        </tr>
+      </tbody>
+      </table>
+    `;
+
+    body.html(html);
+    details.style("visibility", "visible");
+  });
+
+  var zoom = d3.zoom()
+  .scaleExtent([1, 8])
+        .on('zoom', function() {
+            svg.selectAll('path')
+             .attr('transform', d3.event.transform)
+            svg.select("g#arrests").selectAll("circle")
+            // console.log("this ffer",d3.event.transform)
+            .attr('transform', d3.event.transform)
+            .attr("r", 3/d3.event.transform.k);
+  });
+
+
+
+  svg.select("#legend")
+  svg.append("circle").attr("cx",870).attr("cy",30).attr("r", 6).style("fill", "#000000")
+  svg.append("circle").attr("cx",870).attr("cy",50).attr("r", 6).style("fill", "#FF0000")
+  svg.append("circle").attr("cx",870).attr("cy",70).attr("r", 6).style("fill", "#0000ff")
+  svg.append("circle").attr("cx",870).attr("cy",90).attr("r", 6).style("fill", "#FF7F00")
+  svg.append("circle").attr("cx",870).attr("cy",110).attr("r", 6).style("fill", "#6a0dad")
+  svg.append("text").attr("x", 800).attr("y", 10).text("Type of Complaint").style("font-size", "12px").attr("alignment-baseline","middle")
+  svg.append("text").attr("x", 880).attr("y", 30).text("Other").style("font-size", "10px").attr("alignment-baseline","middle")
+  svg.append("text").attr("x", 880).attr("y", 50).text("Pass").style("font-size", "10px").attr("alignment-baseline","middle")
+  svg.append("text").attr("x", 880).attr("y", 70).text("Delay").style("font-size", "10px").attr("alignment-baseline","middle")
+  svg.append("text").attr("x", 880).attr("y", 90).text("Discourtesy").style("font-size", "10px").attr("alignment-baseline","middle")
+  svg.append("text").attr("x", 880).attr("y", 110).text("NextMuni").style("font-size", "10px").attr("alignment-baseline","middle")
+
+
+  svg.append('text')
+  .attr('class', 'title')
+  .attr('x', 500)
+  .attr('y',0)
+  .attr('dy', '1.75ex')
+  .attr('text-anchor', 'middle')
+  .attr("font-weight", 600)
+  .style("font-size", "16")
+  .text('MUNI 311 Calls for Feburary 2020 in SF');
+
+  svg.call(zoom);
+}
+
+function translate(x, y) {
+  return "translate(" + String(x) + "," + String(y) + ")";
+}
+</script>
+</body>

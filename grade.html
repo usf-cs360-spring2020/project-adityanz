@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Grade</title>
+
+    <!-- Load Bulma from CDN (consider saving it to repository instead) -->
+    <!-- https://bulma.io/ -->
+    <link rel="stylesheet" href="https://jenil.github.io/bulmaswatch/journal/bulmaswatch.min.css">
+
+    <!-- Load Font Awesome 5 (free) icons -->
+
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  </head>
+
+  <body>
+
+  <div id="navigation">
+  </div>
+  <script>
+  $(function(){
+    $("#navigation").load("navbar.html");
+  });
+  </script>
+
+  <section class="section">
+    <div class="container">
+      <!-- Begin page content -->
+      <div class="content">
+
+
+        <!-- TODO: Change or remove table -->
+        <!-- https://bulma.io/documentation/elements/table/ -->
+        <table class="table is-hoverable is-bordered grades">
+          <thead>
+            <tr>
+              <th>Letter</th>
+              <th>Done?</th>
+              <th>Requirement</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr>
+              <td>D</td>
+              <td><i class="has-text-success fas fa-check-circle"></i></td>
+              <td>A visualization prototype in any other tool or language than D3v5.</td>
+              <td>This was achieved by doing it directly in D3</td>
+            </tr>
+
+
+            <tr>
+              <td>C</td>
+              <td><i class="has-text-success fas fa-check-circle"></i></td>
+              <td> A static visualization in D3v5 with a projected district or neighborhood base map. </td>
+              <td>This was achieved by creating the map with the SF city and streets base map.</td>
+            </tr>
+
+            <tr>
+              <td>B</td>
+              <td><i class="has-text-success fas fa-check-circle"></i></td>
+              <td>   The C level requirements plus details-on-demand interactivity. </td>
+              <td>This was achieved by creating a hover over effect when viewing the map.</td>
+            </tr>
+
+            <tr>
+              <td>A</td>
+              <td><i class="has-text-success fas fa-check-circle"></i></td>
+             <td> The B level requirements plus either zoom, filter, or brush interactivity.</td>
+              <td>This was achieved by creating a zoom interactivity to see the dots at the street level in SF.</td>
+            </tr>
+          </tbody>
+
+        </table>
+
+
+
+
+      </div>
+      <!-- End page content -->
+    </div>
+  </section>
+
+  <div id="footer">
+  </div>
+  <script>
+  $(function(){
+    $("#footer").load("footer.html");
+  });
+  </script>
+
+  <!-- End mobile menu responsiveness -->
+  </body>
+
+</html>

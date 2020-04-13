@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Data</title>
+
+    <!-- Load Bulma from CDN (consider saving it to repository instead) -->
+    <!-- https://bulma.io/ -->
+    <link rel="stylesheet" href="https://jenil.github.io/bulmaswatch/journal/bulmaswatch.min.css">
+
+    <!-- Load Font Awesome 5 (free) icons -->
+
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  </head>
+
+  <body>
+
+  <div id="navigation">
+  </div>
+  <script>
+  $(function(){
+    $("#navigation").load("navbar.html");
+  });
+  </script>
+
+  <section class="section">
+    <div class="container">
+      <!-- Begin page content -->
+      <div class="content">
+
+        <h2 id="data">Data Source</h2>
+
+        <h2 id="data">Data</h2>
+
+                        <p>The data set was taken from Data SF and shows the <a href="https://data.sfgov.org/City-Infrastructure/311-Cases/vw6y-z8j6"> 311 Calls </a> for the San Francisco City.
+                        <p>It collects data by monthly period from July 2008 to April 2020 (as of this date in 9th April 2020)</p>
+
+                        <blockquote>
+                          <p>All data are under Public Domain Dedication and License (PDDL).</p>
+                          <p>From Open Data Commons webpage on PDDL:</p>
+                          <p>You are free to:</p>
+                          <p>1.To Share: To copy, distribute and use the database.</p>
+                          <p>2.To Create: To produce works from the database.</p>
+                          <p>3.To Adapt: To modify, transform and build upon the database.
+                          <cite> <a href="https://support.datasf.org/help/what-license-are-open-data-sets-under">--Data SF license information</a></cite>
+                        </blockquote>
+
+          <p>
+              All the variables I had used were labeled as red in the table below:
+          </p>
+          <div style="height:400px; width: 1200px; overflow:auto;">
+            <table class="table is-hoverable is-bordered grades">
+                        <thead>
+                          <tr>
+                            <th>Column Name</th>
+                            <th>Description</th>
+                            <th>Type</th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          <tr>
+                            <tr class="is-selected">
+                            <td>CaseID</td>
+                            <td>The unique ID of the service request created.</td>
+                            <td>Number</td>
+                          </tr>
+
+                          <tr>
+                            <tr class="is-selected">
+                            <td>Opened</td>
+                            <td>The date and time when the service request was made.</td>
+                            <td>Date & Time</td>
+                          </tr>
+
+                          <tr>
+                            <td>Closed</td>
+                            <td>The date and time when the service request was closed.</td>
+                            <td>Date & Time</td>
+                          </tr>
+
+                          <tr>
+                            <td>Updated</td>
+                            <td>The date and time when the service request was last modified. For requests with status=closed, this will be the date the request was closed.</td>
+                            <td>Date & Time</td>
+                          </tr>
+
+                          <tr>
+                            <td>Status</td>
+                            <td>A single-word indicator of the current state of the service request. (Note: GeoReport V2 only permits ‘open’ and ‘closed’).</td>
+                            <td>Plain Text</td>
+                          </tr>
+
+                          <tr>
+                            <td>Status Notes</td>
+                            <td>Explanation of why status was changed to current state or more details on current status than conveyed with status alone.</td>
+                            <td>Plain Text</td>
+                          </tr>
+
+                          <tr>
+                            <td>Responsible Agency</td>
+                            <td>The agency responsible for fulfilling or otherwise addressing the service request.</td>
+                            <td>Plain Text</td>
+                          </tr>
+
+                          <tr>
+                            <tr class="is-selected">
+                            <td>Category</td>
+                            <td>The human readable name of the service request type.</td>
+                            <td>Plain Text</td>
+                          </tr>
+
+
+                          <tr>
+                            <td>Request Type</td>
+                            <td>The human readable name of the service request subtype.</td>
+                            <td>Plain Text</td>
+                          </tr>
+
+                          <tr>
+                            <tr class="is-selected">
+                            <td>Request Details</td>
+                            <td>The human readable name of the service request details.</td>
+                            <td>Plain Text</td>
+                          </tr>
+
+                          <tr>
+                            <td>Address</td>
+                            <td>Human readable address or description of location.</td>
+                            <td>Plain Text</td>
+                          </tr>
+
+                          <tr>
+                            <td>Street</td>
+                            <td>Primary Street of the associated address. Parks may have a park name instead of a street name. Requests not associated with an address will be blank.</td>
+                            <td>Plain Text</td>
+                          </tr>
+
+                          <tr>
+                            <td>Supervisor District</td>
+                            <td>San Francisco Supervisor District as defined in 'Supervisor Districts as of April 2012'.</td>
+                            <td>Number</td>
+                          </tr>
+
+                          <tr>
+                            <tr class="is-selected">
+                            <td>Neighborhood</td>
+                            <td>San Francisco Neighborhood as defined in 'SF Find Neighborhoods'd.</td>
+                            <td>Plain Text</td>
+                          </tr>
+
+                          <tr>
+                            <td>Police District</td>
+                            <td>San Francisco Police District as defined in 'Current Police Districts'.</td>
+                            <td>Plain Text</td>
+                          </tr>
+                          <tr>
+                            <tr class="is-selected">
+                            <td>Latitude</td>
+                            <td>Latitude of the location, using the WGS84 projection.</td>
+                            <td>Number</td>
+                          </tr>
+
+
+                          <tr>
+                            <tr class="is-selected">
+                            <td>Longitude</td>
+                            <td>Longitude of the location, using the WGS84 projection</td>
+                            <td>Number</td>
+                          </tr>
+
+                          <tr>
+                            <td>Point</td>
+                            <td>Combination of Latitude and Longitude for Socrata native maps.</td>
+                            <td>Location</td>
+                          </tr>
+
+                          <tr>
+                            <tr class="is-selected">
+                            <td>Source</td>
+                            <td>Mechanism or path by which the service request was received; typically ‘Phone’, ‘Text/SMS’, ‘Website’, ‘Mobile App’, ‘Twitter’, etc but terms may vary by system..</td>
+                            <td>Plain Text</td>
+                          </tr>
+
+                          <tr>
+                            <td>Media URL</td>
+                            <td>A URL to media associated with the request, e.g. an image..</td>
+                            <td>Website URL</td>
+                          </tr>
+
+
+
+
+                        </tbody>
+                      </table>
+          </div>
+
+          </p>
+
+            <p> For these specific visualizations, I ended up using as the source as the representation of the dots on my map</p>
+            <ol>
+            <li>Web</li>
+            <li>Phone</li>
+            <li>Twitter</li>
+            <li>Mobile</li>
+          </ol>
+
+        <h3 id="wrangling">Wrangling and Filtering</h3>
+        <p> I originally downloaded the whole dataset since I wanted to work with more categories. </p>
+        <p> It was important to see the relevance and the importance of the data. </p>
+        <p> Filter the dataset to show cases that were OPENED in the month of February 2020 only. Then choose a CATEGORY that has at least 100 cases associated with it. For example, this includes "Street and Sidewalk Cleaning" (approximately 21k cases) and "Residential Building Request" (approximately 100 cases).</p>
+        <p> I ended up not doing that much data wrangling for this project. </p>
+      </div>
+      <!-- End page content -->
+    </div>
+  </section>
+
+  <div id="footer">
+  </div>
+  <script>
+  $(function(){
+    $("#footer").load("footer.html");
+  });
+  </script>
+
+  <!-- End mobile menu responsiveness -->
+  </body>
+
+</html>

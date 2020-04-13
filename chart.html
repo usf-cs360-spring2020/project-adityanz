@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<link href="style.css" rel="stylesheet" type="text/css">
+
+</style>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Map</title>
+
+    <!-- Load Bulma from CDN (consider saving it to repository instead) -->
+    <!-- https://bulma.io/ -->
+    <link rel="stylesheet" href="https://jenil.github.io/bulmaswatch/journal/bulmaswatch.min.css">
+
+    <!-- Load Font Awesome 5 (free) icons -->
+
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+</head>
+
+  <body>
+
+  <div id="navigation">
+  </div>
+  <script>
+  $(function(){
+    $("#navigation").load("navbar.html");
+  });
+  </script>
+
+
+      <section class="section">
+        <div class="container">
+          <div class="content has-text-centered">
+            <h1>SF 311 Calls Map Graph</h1>
+            <h2>Title: MUNI Feedback</h2>
+            <!-- <h3>This is the Raw Graphics Implementation</h3> -->
+            <h3>This is the D3 Implementation</h3>
+            <meta charset="utf-8">
+
+            <figure>
+              <p><iframe src="https://usf-cs360-spring2020.github.io/homework3-adityanz/map.html" width="1000" height="700">Map</iframe></p>
+            </figure>
+          </p2>
+          <br></br>
+          <h3>Wrangling</h3>
+
+            <p2>
+              To do the encoding for the MUNI data for February 2020, even though they were a lot of points, I decide to put them all onto the map, to see the issues based on the different area. Using Tableau, I had to split the request type and the number that 311 used to code any of the incoming calls, and then used Excel to find the four most types of common request complaints, and decided to use Pass, Delay, Discomfort and NextMuni. I then used color-coding to represent the different types of complaints categories and put all the other ones in black.
+              I used the data SF website where I wrangled the data, as stated in the data section, based on the month of February 2020, looking at the category of MUNI Feedback. 
+
+
+            </p2>
+              <br></br>
+              <h3>Interactivity</h3>
+
+              <p2>
+
+                For the interactivity in this visualization, I did a simple zoom where one can zoom into the neighborhoods and with the dot size becoming smaller, can pan in and see the specific location of each of the complaints and also see the type based on the color. I also added a filter based on the local supervisor district to make sure our local representatives know about the issues with the Muni and that it would show the points corresponding to that specific supervisor district, but it also shows all the neighborhoods that are in the district, since many do not know what district it is part of and I also show the current leaders of the district, as of April 2020. Finally, there is a tooltip on each of the circle points, that gives a lot of information in regards to the date, time, the neighborhood, the case id and the actual details to the 311 call so that people can learn more about each specific case.
+
+            </p2>
+            <br></br>
+            <h3>Analysis</h3>
+
+            <p2>
+              It was clear, that this map had a lot of information being portrayed in terms of the muni system. For one, if we look at the complaint type, a lot of the calls that came in were either about the muni pass and the delays of the bus not showing up, which is something that I had personally experienced. The way the data is clustered, you can see that a lot of complaints came from district 3,5,6 in SF since it had a lot of the cluster of the points. There is also a lot of issues with the nextMuni system that tells when the bus would come on each of the bus stops, and that is what leads to a lot of the complaints.  It is interesting to see that they were very few complaints in the sunset area, unlike the rest of the city which had a much higher cluster of complaints. I also saw in the data, that they are also a lot of service issues where the staff are not necessarily friendly to the passengers and this is something that should not exist in a public transit system, which is very odd. There are a lot of things and issues the MUNI system still needs to address. It is clear, that MUNI needs to better their interaction with the public, fix their old systems for the bus timetable and reduce the amount of delays. 
+          </p2>
+
+          <h3>Conclusion</h3>
+
+          <p2>
+            I enjoyed making this nonproportional symbol map. It taught me a lot about more d3 techniques such as filtering and zooming, and also controlling certain aspects of the visualization with the interactivity.
+        </p2>
+            </div>
+
+  </section>
+  <div id="footer">
+  </div>
+
+  </body>
+
+</html>
