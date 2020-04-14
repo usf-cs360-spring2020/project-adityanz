@@ -37,8 +37,8 @@
 
         <h2 id="data">Data</h2>
 
-                        <p>The data set was taken from Data SF and shows the <a href="https://data.sfgov.org/City-Infrastructure/311-Cases/vw6y-z8j6"> 311 Calls </a> for the San Francisco City.
-                        <p>It collects data by monthly period from July 2008 to April 2020 (as of this date in 9th April 2020)</p>
+                        <p>The data set was taken from Data SF and shows the <a href="https://data.sfgov.org/Health-and-Social-Services/Restaurant-Scores-LIVES-Standard/pyih-qa8i"> Health Scores for Restaurants </a> in the city and county of San Francisco.
+                        <p>It collects data of the latest health score of the restaurant</p>
 
                         <blockquote>
                           <p>All data are under Public Domain Dedication and License (PDDL).</p>
@@ -66,131 +66,109 @@
                         <tbody>
                           <tr>
                             <tr class="is-selected">
-                            <td>CaseID</td>
+                            <td>business_id</td>
                             <td>The unique ID of the service request created.</td>
                             <td>Number</td>
                           </tr>
 
                           <tr>
                             <tr class="is-selected">
-                            <td>Opened</td>
+                            <td>business_name</td>
                             <td>The date and time when the service request was made.</td>
-                            <td>Date & Time</td>
+                            <td>Plain Text</td>
                           </tr>
 
                           <tr>
-                            <td>Closed</td>
+                            <td>bsuiness_address</td>
                             <td>The date and time when the service request was closed.</td>
-                            <td>Date & Time</td>
+                            <td>Plain Text</td>
                           </tr>
 
                           <tr>
-                            <td>Updated</td>
+                            <td>business_city</td>
                             <td>The date and time when the service request was last modified. For requests with status=closed, this will be the date the request was closed.</td>
-                            <td>Date & Time</td>
+                            <td>Plain Text</td>
                           </tr>
 
                           <tr>
-                            <td>Status</td>
+                            <td>business_state</td>
                             <td>A single-word indicator of the current state of the service request. (Note: GeoReport V2 only permits ‘open’ and ‘closed’).</td>
                             <td>Plain Text</td>
                           </tr>
 
                           <tr>
-                            <td>Status Notes</td>
+                            <td>business_postal_code</td>
                             <td>Explanation of why status was changed to current state or more details on current status than conveyed with status alone.</td>
                             <td>Plain Text</td>
                           </tr>
 
                           <tr>
-                            <td>Responsible Agency</td>
+                            <td>business_latitude</td>
                             <td>The agency responsible for fulfilling or otherwise addressing the service request.</td>
                             <td>Plain Text</td>
                           </tr>
 
                           <tr>
-                            <tr class="is-selected">
-                            <td>Category</td>
+                            <td>business_longitude</td>
                             <td>The human readable name of the service request type.</td>
                             <td>Plain Text</td>
                           </tr>
 
 
                           <tr>
-                            <td>Request Type</td>
+                            <td>business_location</td>
                             <td>The human readable name of the service request subtype.</td>
-                            <td>Plain Text</td>
+                            <td>Point</td>
                           </tr>
 
                           <tr>
-                            <tr class="is-selected">
-                            <td>Request Details</td>
+                            <td>business_phone number</td>
                             <td>The human readable name of the service request details.</td>
                             <td>Plain Text</td>
                           </tr>
 
                           <tr>
-                            <td>Address</td>
+                            <td>inspection_id</td>
                             <td>Human readable address or description of location.</td>
                             <td>Plain Text</td>
                           </tr>
 
                           <tr>
-                            <td>Street</td>
+                            <td>inspection_date</td>
                             <td>Primary Street of the associated address. Parks may have a park name instead of a street name. Requests not associated with an address will be blank.</td>
-                            <td>Plain Text</td>
+                            <td>Date</td>
                           </tr>
 
                           <tr>
-                            <td>Supervisor District</td>
+                            <tr class="is-selected">
+                            <td>inspection_score/td>
                             <td>San Francisco Supervisor District as defined in 'Supervisor Districts as of April 2012'.</td>
                             <td>Number</td>
                           </tr>
 
                           <tr>
-                            <tr class="is-selected">
-                            <td>Neighborhood</td>
+                            <td>inspection_type</td>
                             <td>San Francisco Neighborhood as defined in 'SF Find Neighborhoods'd.</td>
                             <td>Plain Text</td>
                           </tr>
 
                           <tr>
-                            <td>Police District</td>
+                            <td>violation_id</td>
                             <td>San Francisco Police District as defined in 'Current Police Districts'.</td>
                             <td>Plain Text</td>
                           </tr>
                           <tr>
-                            <tr class="is-selected">
-                            <td>Latitude</td>
+                            <td>violation_description</td>
                             <td>Latitude of the location, using the WGS84 projection.</td>
-                            <td>Number</td>
-                          </tr>
-
-
-                          <tr>
-                            <tr class="is-selected">
-                            <td>Longitude</td>
-                            <td>Longitude of the location, using the WGS84 projection</td>
-                            <td>Number</td>
-                          </tr>
-
-                          <tr>
-                            <td>Point</td>
-                            <td>Combination of Latitude and Longitude for Socrata native maps.</td>
-                            <td>Location</td>
-                          </tr>
-
-                          <tr>
-                            <tr class="is-selected">
-                            <td>Source</td>
-                            <td>Mechanism or path by which the service request was received; typically ‘Phone’, ‘Text/SMS’, ‘Website’, ‘Mobile App’, ‘Twitter’, etc but terms may vary by system..</td>
                             <td>Plain Text</td>
                           </tr>
 
+
                           <tr>
-                            <td>Media URL</td>
-                            <td>A URL to media associated with the request, e.g. an image..</td>
-                            <td>Website URL</td>
+                            <td>risk_category</td>
+                            <td>Longitude of the location, using the WGS84 projection</td>
+                            <td>Plain Text</td>
+                          </tr>
                           </tr>
 
 
@@ -199,22 +177,23 @@
                         </tbody>
                       </table>
           </div>
-
-          </p>
-
-            <p> For these specific visualizations, I ended up using as the source as the representation of the dots on my map</p>
+<!--
+            <p> For these specific visualizations, I ended up using as the representation of the dots on my map</p>
             <ol>
             <li>Web</li>
             <li>Phone</li>
             <li>Twitter</li>
             <li>Mobile</li>
-          </ol>
+          </ol> -->
+
+          <p> I also want to use the yelp dataset in order to get the average review score from yelp and see if that had an effect on the health score and the way the people percieved the resturants </p>
 
         <h3 id="wrangling">Wrangling and Filtering</h3>
         <p> I originally downloaded the whole dataset since I wanted to work with more categories. </p>
-        <p> It was important to see the relevance and the importance of the data. </p>
+        <p> Since I am still working with the data, I have currently not done any wrangling and filtering yet. </p>
+        <!-- <p> It was important to see the relevance and the importance of the data. </p>
         <p> Filter the dataset to show cases that were OPENED in the month of February 2020 only. Then choose a CATEGORY that has at least 100 cases associated with it. For example, this includes "Street and Sidewalk Cleaning" (approximately 21k cases) and "Residential Building Request" (approximately 100 cases).</p>
-        <p> I ended up not doing that much data wrangling for this project. </p>
+        <p> I ended up not doing that much data wrangling for this project. </p> -->
       </div>
       <!-- End page content -->
     </div>
