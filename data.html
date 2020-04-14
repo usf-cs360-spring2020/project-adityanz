@@ -74,99 +74,99 @@
                           <tr>
                             <tr class="is-selected">
                             <td>business_name</td>
-                            <td>The date and time when the service request was made.</td>
+                            <td>The official name of the business.</td>
                             <td>Plain Text</td>
                           </tr>
 
                           <tr>
                             <td>bsuiness_address</td>
-                            <td>The date and time when the service request was closed.</td>
+                            <td>The physical address of the business.</td>
                             <td>Plain Text</td>
                           </tr>
 
                           <tr>
                             <td>business_city</td>
-                            <td>The date and time when the service request was last modified. For requests with status=closed, this will be the date the request was closed.</td>
+                            <td>The city of the location of the business.</td>
                             <td>Plain Text</td>
                           </tr>
 
                           <tr>
                             <td>business_state</td>
-                            <td>A single-word indicator of the current state of the service request. (Note: GeoReport V2 only permits ‘open’ and ‘closed’).</td>
+                            <td>The state of the location of the business.</td>
                             <td>Plain Text</td>
                           </tr>
 
                           <tr>
                             <td>business_postal_code</td>
-                            <td>Explanation of why status was changed to current state or more details on current status than conveyed with status alone.</td>
+                            <td>The postal code of the location of the business.</td>
                             <td>Plain Text</td>
                           </tr>
 
                           <tr>
                             <td>business_latitude</td>
-                            <td>The agency responsible for fulfilling or otherwise addressing the service request.</td>
+                            <td>The latitude of the location of the business.</td>
                             <td>Plain Text</td>
                           </tr>
 
                           <tr>
                             <td>business_longitude</td>
-                            <td>The human readable name of the service request type.</td>
+                            <td>The longitude of the location of the business.</td>
                             <td>Plain Text</td>
                           </tr>
 
 
                           <tr>
                             <td>business_location</td>
-                            <td>The human readable name of the service request subtype.</td>
+                            <td>The Point formatted location of the business.</td>
                             <td>Point</td>
                           </tr>
 
                           <tr>
                             <td>business_phone number</td>
-                            <td>The human readable name of the service request details.</td>
+                            <td>The phone number of the location of the business.</td>
                             <td>Plain Text</td>
                           </tr>
 
                           <tr>
                             <td>inspection_id</td>
-                            <td>Human readable address or description of location.</td>
+                            <td>The health department id code.</td>
                             <td>Plain Text</td>
                           </tr>
 
                           <tr>
                             <td>inspection_date</td>
-                            <td>Primary Street of the associated address. Parks may have a park name instead of a street name. Requests not associated with an address will be blank.</td>
+                            <td>The health department inspection date.</td>
                             <td>Date</td>
                           </tr>
 
                           <tr>
                             <tr class="is-selected">
                             <td>inspection_score</td>
-                            <td>San Francisco Supervisor District as defined in 'Supervisor Districts as of April 2012'.</td>
+                            <td>The health department inspection score.</td>
                             <td>Number</td>
                           </tr>
 
                           <tr>
                             <td>inspection_type</td>
-                            <td>San Francisco Neighborhood as defined in 'SF Find Neighborhoods'd.</td>
+                            <td>The health department type of inspection.</td>
                             <td>Plain Text</td>
                           </tr>
 
                           <tr>
                             <td>violation_id</td>
-                            <td>San Francisco Police District as defined in 'Current Police Districts'.</td>
+                            <td>The health department type of violation as defined in their health code.</td>
                             <td>Plain Text</td>
                           </tr>
                           <tr>
                             <td>violation_description</td>
-                            <td>Latitude of the location, using the WGS84 projection.</td>
+                            <td>The health department type of violation and its details as defined in their health code.</td>
                             <td>Plain Text</td>
                           </tr>
 
 
                           <tr>
                             <td>risk_category</td>
-                            <td>Longitude of the location, using the WGS84 projection</td>
+                            <td>The level of risk of the health violation.</td>
                             <td>Plain Text</td>
                           </tr>
                           </tr>
@@ -185,7 +185,9 @@
             <li>Twitter</li>
             <li>Mobile</li>
           </ol> -->
-
+          <br></br>
+          <p>The second data set was taken from Kaggle and shows the <a href="http://kaggle.com/yelp-dataset/yelp-dataset"> Yelp Dataset </a> and it will focus on the city and county of San Francisco, even though the Data has information from all of the USA.
+          <p>It collects data of the latest health score of the restaurant</p>
           <p> I also want to use the yelp dataset in order to get the average review score from yelp and see if that had an effect on the health score and the way the people percieved the resturants </p>
 
         <h3 id="wrangling">Wrangling and Filtering</h3>
