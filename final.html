@@ -158,8 +158,8 @@ div.tooltip-donut {
             <script>
 
             // location of data files
-            let csv_data = "small.csv";
-            // using a smaller test file
+            let csv_data = 'small.csv';
+
 
             let config = {
               'svg': {},
@@ -281,6 +281,54 @@ d3.json(urls.basemap).then(function(json) {
   d3.csv(csv_data).then(drawArrests);
 });
 
+function oldStackedBarDataProcessing(row, index) {
+  // this will be our converted output row
+  let out = {};
+  //out.values = [];
+  out.total;
+  // this will be the values from each yyyy-mm column
+  for (let col in row) {
+    switch (col) {      // these are the text columns that do not need conversion
+      // these are the columns that need to be converted to integers
+      case 'Avg. Inspection Score':
+          // out[col] = parseInt(row[col]);
+          break;
+      // these should be our time series values
+
+      // case 'Call Type Group':
+      //   break;
+      //
+      // case 'Price':
+      // // out[col] = row[col];
+      // // var type = row[col];
+      // //   out[type] = value;
+      // // console.log(out[type])
+      //   break;
+
+      case 'Zip Code':
+        out[col] = row[col];
+        break;
+
+      default:
+      var type = row[col];
+      // console.log(type);
+      var value = parseInt(row['Avg. Inspection Score'])
+      // console.log(value);
+      // var type = value;
+      out[type] = value;
+      out.total = value;
+      // var value = parseInt(row["Avg. Inspection Score"])
+      // var time  = parseFloat(row["Price"]).toFixed(2);
+      //  out[type] = value;
+      //  // out[type+" zip code"] = zip code;
+      //  out.total = value;
+       break;
+    }
+  }
+  console.log(out);
+  return out;
+}
+
             function drawStackedBar(data) {
 
               console.log(data)
@@ -302,15 +350,16 @@ d3.json(urls.basemap).then(function(json) {
                 });
               if(exist.length){
               var index = output.indexOf(exist[0]);
-              // console.log(index);
+              console.log(index);
               var total = output[index].total + item.total;
+              console.log(total);
               Object.assign(output[index], item);
-              // console.log(total);
               output[index].total = total;
               } else{
               if(typeof item.value == 'string'){
                 item.value = [item.value];
               }
+              console.log(item);
               output.push(item);
               }
               });
@@ -381,6 +430,8 @@ d3.json(urls.basemap).then(function(json) {
 
               zScale.domain(keys_color)
               // console.log(output);
+
+              d3.selectAll("svg#bar > *").remove();
 
               var div = d3.select("body").append("div")
                .attr("class", "tooltip-donut")
@@ -630,7 +681,6 @@ function drawArrests(json) {
           console.log("in remove")
     });
 
-
     var symbols = g.arrests.selectAll("circle")
         .data(json)
         .enter()
@@ -641,20 +691,18 @@ function drawArrests(json) {
         .attr("class", "symbol")
         .style("fill","000000")
       // symbols.filter(d => d['Risk Category Improved'] !== selected_dataset)
+          symbols.filter(d => d['Rating'] >= 1 &&  d['Rating'] < 2).style("fill","FF0000")
+          symbols.filter(d => d['Rating'] >= 2 &&  d['Rating'] < 3).style("fill","0000ff")
+          symbols.filter(d => d['Rating'] >= 3 &&  d['Rating'] < 4).style("fill","FF7F00");
+          symbols.filter(d => d['Rating'] >= 4 &&  d['Rating'] < 5).style("fill","6a0dad");
+          symbols.filter(d => d['Rating'] == 5).style("fill","6a0dad");
 
-          symbols.filter(d => d['Rating'] === 1).style("fill","FF0000")
-          symbols.filter(d => d['Rating'] === 2).style("fill","0000ff")
-          symbols.filter(d => d['Rating'] === 3).style("fill","FF7F00");
-          symbols.filter(d => d['Rating'] === 4).style("fill","6a0dad");
           console.log(remover)
           if (remover != '0')
           {
             console.log(remover)
             symbols.filter(d => d["Risk Category Improved"] != remover).remove();
           }
-
-
-
 
     symbols.on("mouseover", function(d) {
       d3.select(this).raise();
@@ -713,19 +761,19 @@ function drawArrests(json) {
 
 
 
-  // svg.select("#legend")
-  // svg.append("circle").attr("cx",870).attr("cy",30).attr("r", 6).style("fill", "#000000")
-  // svg.append("circle").attr("cx",870).attr("cy",50).attr("r", 6).style("fill", "#FF0000")
-  // svg.append("circle").attr("cx",870).attr("cy",70).attr("r", 6).style("fill", "#0000ff")
-  // svg.append("circle").attr("cx",870).attr("cy",90).attr("r", 6).style("fill", "#FF7F00")
-  // svg.append("circle").attr("cx",870).attr("cy",110).attr("r", 6).style("fill", "#6a0dad")
-  // svg.append("text").attr("x", 800).attr("y", 10).text("Type of Complaint").style("font-size", "12px").attr("alignment-baseline","middle")
-  // svg.append("text").attr("x", 880).attr("y", 30).text("Other").style("font-size", "10px").attr("alignment-baseline","middle")
-  // svg.append("text").attr("x", 880).attr("y", 50).text("Pass").style("font-size", "10px").attr("alignment-baseline","middle")
-  // svg.append("text").attr("x", 880).attr("y", 70).text("Delay").style("font-size", "10px").attr("alignment-baseline","middle")
-  // svg.append("text").attr("x", 880).attr("y", 90).text("Discourtesy").style("font-size", "10px").attr("alignment-baseline","middle")
-  // svg.append("text").attr("x", 880).attr("y", 110).text("NextMuni").style("font-size", "10px").attr("alignment-baseline","middle")
-  //
+  svg.select("#legend")
+  svg.append("circle").attr("cx",870).attr("cy",30).attr("r", 6).style("fill", "#000000")
+  svg.append("circle").attr("cx",870).attr("cy",50).attr("r", 6).style("fill", "#FF0000")
+  svg.append("circle").attr("cx",870).attr("cy",70).attr("r", 6).style("fill", "#0000ff")
+  svg.append("circle").attr("cx",870).attr("cy",90).attr("r", 6).style("fill", "#FF7F00")
+  svg.append("circle").attr("cx",870).attr("cy",110).attr("r", 6).style("fill", "#6a0dad")
+  svg.append("text").attr("x", 800).attr("y", 10).text("Yelp Rating").style("font-size", "12px").attr("alignment-baseline","middle")
+  svg.append("text").attr("x", 880).attr("y", 30).text("Between 1 and 2").style("font-size", "10px").attr("alignment-baseline","middle")
+  svg.append("text").attr("x", 880).attr("y", 50).text("Between 2 and 3").style("font-size", "10px").attr("alignment-baseline","middle")
+  svg.append("text").attr("x", 880).attr("y", 70).text("Between 3 and 4").style("font-size", "10px").attr("alignment-baseline","middle")
+  svg.append("text").attr("x", 880).attr("y", 90).text("Between 4 and 5").style("font-size", "10px").attr("alignment-baseline","middle")
+  svg.append("text").attr("x", 880).attr("y", 110).text("5 stars!").style("font-size", "10px").attr("alignment-baseline","middle")
+
 
   svg.append('text')
   .attr('class', 'title')
