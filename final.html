@@ -158,7 +158,7 @@ div.tooltip-donut {
             <script>
 
             // location of data files
-            let bar = 'stackedbardata.csv';
+            let csv_data = 'small.csv';
 
 
             let config = {
@@ -278,78 +278,47 @@ d3.json(urls.basemap).then(function(json) {
 
   d3.json(urls.streets).then(drawStreets)
   // d3.json(urls.muni).then(drawMuni)
-  d3.csv("small.csv").then(drawArrests);
+  d3.csv(csv_data).then(drawArrests);
 });
-            function convertRow(row, index) {
-              let out = {};
-              var i =0;
 
-              for (i =0; i< row.length; i++)
-              {
-              console.log(row[i]["Price"]);
-              // this will be our converted output row
-              //out.values = [];
-              out.total;
-              // this will be the values from each yyyy-mm column
-              for (let col in row) {
-                switch (col) {      // these are the text columns that do not need conversion
-                  // these are the columns that need to be converted to integers
-                  default:
-                  var type = row[col];
-                  console.log("IND")
-                  var value = parseInt(row['Inspection Score'])
-                  // var type = value;
-                  out[type] = value;
-                  out.total = value;
-                  // var value = parseInt(row["Avg. Inspection Score"])
-                  // var time  = parseFloat(row["Price"]).toFixed(2);
-                  //  out[type] = value;
-                  //  // out[type+" zip code"] = zip code;
-                  //  out.total = value;
-                   break;
-                }
-              }
-            }
-              console.log(out);
-              return out;
-            }
+            function drawStackedBar(data) {
 
-            function drawMain(data) {
-              // console.log("data")
-              // console.log(data)
+              console.log(data)
               var newdata = []
               var output = []
 
 
-              var keys = ['$','$$','$$$','$$$$','total', 'Zip Code']
-              var i;
+              var keys = ['$','$$','$$$','$$$$']
+             var i;
               var j;
               // console.log(data)
 
 
-            // console.log(data['$']);
-
-
+              // console.log(data['$']);
 
               data.forEach(function(item){
-              var exist = output.filter(function(v,i){
-              return v["Zip Code"] == item["Zip Code"];
-            });
-            if(exist.length){
+                var exist = output.filter(function(v,i){
+                return v["Zip Code"] == item["Zip Code"];
+                });
+              if(exist.length){
               var index = output.indexOf(exist[0]);
               // console.log(index);
               var total = output[index].total + item.total;
               Object.assign(output[index], item);
               // console.log(total);
               output[index].total = total;
-            } else{
+              } else{
               if(typeof item.value == 'string'){
                 item.value = [item.value];
               }
               output.push(item);
-            }
-            });
+              }
+              });
               output.sort(function(a, b) { return b.total - a.total; });
+              console.log(output);
+              //
+              // console.log("out")
+              console.log(output)
 
               for (j = 0; j< output.length; j++){
 
@@ -358,23 +327,32 @@ d3.json(urls.basemap).then(function(json) {
                 const temp = new Object();
                   for (i=0; i<keys.length; i++)
                   {
+                    temp["Zip Code"] = output[j]["Zip Code"];
                     // console.log(item["$$$"])
                     // console.log(item[keys[i]])
-                    if (output[j].hasOwnProperty(keys[i]) === false)
+                    // console.log(output[j]["Price"] == keys[i]);
+                    if (output[j]["Price"] == keys[i])
                     {
                       // console.log(keys[i])
-                      // console.log(data[j][keys[i]])
-                      output[j][keys[i]] = 0;
-                      temp[keys[i]] = output[j][keys[i]]
+                      // console.log(output[j])
+                      // console.log(output[j]["Price"])
+                      // console.log(output[j]["Inspection Score"])
+                      var dollarsign = output[j]["Price"];
+                      var score = parseInt(output[j]["Inspection Score"]);
+                      temp[dollarsign] = score;
+
+                      // temp[j][dollarsign]= 0;
+                      // temp[j][dollarsign]= score;
                       // temp[j] = {};
                       // temp[j][keys[i] = data[j][keys[i]];
                     }
                     else{
-                      // console.log(keys[i])
-                      // console.log(data[j][keys[i]])
-                      temp[keys[i]] = output[j][keys[i]]
+                      var dollarsign = keys[i];
+                      var score = 0;
+                      temp[dollarsign] = score;
+                      // temp[j][dollarsign]=score;
                     }
-                    // console.log(temp);
+                    console.log(temp);
                   }
                   newdata[j] = temp;
                   console.log("new item")
@@ -391,8 +369,6 @@ d3.json(urls.basemap).then(function(json) {
               console.log("newdata")
               console.log(newdata)
 
-              console.log("d3")
-              console.log(d3.stack().keys(keys)(newdata))
               // console.log(data)
               // console.log(output)
 
@@ -448,7 +424,9 @@ d3.json(urls.basemap).then(function(json) {
                            .style("opacity", 1)
 
                   let format = d3.format(",")
-                  // let key = Object.keys(d.data).find(key => d.data[key]);
+                  let key = Object.keys(d.data).find(key => d.data[key]);
+                  console.log("YO")
+                  console.log(Object.keys(d.data))
                   // let alarmcount = d[1]-d[0];
                   // let time = 0;
                   // for (var i = 0; i< data.length;i++)
@@ -462,7 +440,7 @@ d3.json(urls.basemap).then(function(json) {
                   // console.log(key)
                   // console.log(d[1]-d[0])
                   // console.log(Object.values(data))
-                  div.html(" Price Category: " + d.data["Price"] + "<br>" + "Zip Code: "+d.data["Zip Code"] + "<br>" +"Total Avg. Inspection Score: "+ format(d[1]-d[0])  + "<br>")
+                  div.html("Price Category: " + key+ "<br>" + "Zip Code: "+d.data["Zip Code"] + "<br>" +"Total Avg. Inspection Score: "+ format(d[1]-d[0])  + "<br>")
                       .style("left", (d3.event.pageX - 30) + "px")
                       .style("top", (d3.event.pageY - 15) + "px")
 
@@ -782,12 +760,31 @@ var bar_data = filteredData.map(function(d) {
             'Inspection Score': d["Inspection Score"]
           }
 });
-
+// console.log(bar_data);
+// let out = {};
+// var k =0;
+// // out.total;
+//
+// for (k =0; k< bar_data.length; k++)
+// {
+//   let price = bar_data[k]["Price"];
+//   var value = parseInt(bar_data[k]["Inspection Score"])
+//   console.log(price)
+//   console.log(value)
+//   var single = {};
+//   single[price] = value
+//   single["Zip Code"] = bar_data[k]["Zip Code"]
+//   single["Total"] = value;
+//   // out.total = value;
+//
+//   console.log(single);
+//   out[k] = single;
+// }
+// console.log(out);
 // d3.csv(bar_data, convertRow).then(drawMain);
+drawStackedBar(bar_data);
 
-convertRow(bar_data);
-
-        console.log(bar_data);
+        // console.log(bar_data);
 
             function translate(x, y) {
               return 'translate(' + x + ',' + y + ')';

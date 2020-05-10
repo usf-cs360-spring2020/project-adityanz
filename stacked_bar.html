@@ -124,9 +124,9 @@
 
                   default:
                   var type = row[col];
-                  console.log(type);
+                  // console.log(type);
                   var value = parseInt(row['Avg. Inspection Score'])
-                  console.log(value);
+                  // console.log(value);
                   // var type = value;
                   out[type] = value;
                   out.total = value;
@@ -138,13 +138,14 @@
                    break;
                 }
               }
+              console.log(out);
               return out;
             }
 
             function drawMain(data) {
 
-              // console.log("data")
-              // console.log(data)
+              console.log("data")
+              console.log(data)
               var newdata = []
               var output = []
 
