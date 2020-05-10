@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<link href="style.css" rel="stylesheet" type="text/css">
+
+</style>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Bar Graph</title>
+
+    <!-- Load Bulma from CDN (consider saving it to repository instead) -->
+    <!-- https://bulma.io/ -->
+    <link rel="stylesheet" href="https://jenil.github.io/bulmaswatch/darkly/bulmaswatch.min.css">
+
+    <!-- Load Font Awesome 5 (free) icons -->
+
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+</head>
+
+  <body>
+
+  <div id="navigation">
+  </div>
+  <script>
+  $(function(){
+    $("#navigation").load("navbar.html");
+  });
+  </script>
+
+
+      <section class="section">
+          <div>
+            <svg class="aditya" id="bar"></svg>
+
+          </div>
+            </section>
+
+            <script>
+
+            // location of data files
+            let bar = 'stackedbardata.csv';
+
+
+            let config = {
+              'svg': {},
+              'margin': {},
+              'plot': {}
+            };
+
+            config.svg.height = 450;
+            config.svg.width = config.svg.height * 1.618; // golden ratio
+
+            config.margin.top = 10;
+            config.margin.right = 10;
+            config.margin.bottom = 20;
+            config.margin.left = 80;
+
+            config.plot.x = config.margin.left;
+            config.plot.y = config.margin.top;
+            config.plot.width = config.svg.width - config.margin.left - config.margin.right;
+            config.plot.height = config.svg.height - config.margin.top - config.margin.bottom;
+
+            let margin = {top: 10, right: 10, bottom: 10, left: 10}
+              , width =960
+              , height = 450
+
+              var yScale = d3.scaleBand()
+              .range([margin.top, height - margin.bottom])
+              .padding(0.1)
+            .paddingOuter(0.2)
+                  .rangeRound([0, height])
+                  .align(0.1);
+
+            var xScale = d3.scaleLinear()
+                  .rangeRound([0, width-200]);
+
+            var zScale = d3.scaleOrdinal()
+                      .range(["#D73F47", "#ABA09C", "#ED7A22", "#65A9A3"]);
+
+
+
+            let svg;
+
+            // load data
+            d3.csv(bar, convertRow).then(drawMain);
+
+            let parseColumnName = d3.timeParse('%Y');
+
+            function convertRow(row, index) {
+              // this will be our converted output row
+              let out = {};
+              //out.values = [];
+              out.total;
+              // this will be the values from each yyyy-mm column
+              for (let col in row) {
+                switch (col) {      // these are the text columns that do not need conversion
+                  // these are the columns that need to be converted to integers
+                  case 'Avg. Inspection Score':
+                      // out[col] = parseInt(row[col]);
+                      break;
+                  // these should be our time series values
+
+                  // case 'Call Type Group':
+                  //   break;
+                  //
+                  // case 'Price':
+                  // // out[col] = row[col];
+                  // // var type = row[col];
+                  // //   out[type] = value;
+                  // // console.log(out[type])
+                  //   break;
+
+                  case 'Zip Code':
+                    out[col] = row[col];
+                    break;
+
+                  default:
+                  var type = row[col];
+                  console.log(type);
+                  var value = parseInt(row['Avg. Inspection Score'])
+                  console.log(value);
+                  // var type = value;
+                  out[type] = value;
+                  out.total = value;
+                  // var value = parseInt(row["Avg. Inspection Score"])
+                  // var time  = parseFloat(row["Price"]).toFixed(2);
+                  //  out[type] = value;
+                  //  // out[type+" zip code"] = zip code;
+                  //  out.total = value;
+                   break;
+                }
+              }
+              return out;
+            }
+
+            function drawMain(data) {
+
+              // console.log("data")
+              // console.log(data)
+              var newdata = []
+              var output = []
+
+
+              var keys = ['$','$$','$$$','$$$$','total', 'Zip Code']
+              var i;
+              var j;
+              // console.log(data)
+
+
+            // console.log(data['$']);
+
+              data.forEach(function(item){
+              var exist = output.filter(function(v,i){
+              return v["Zip Code"] == item["Zip Code"];
+            });
+            if(exist.length){
+              var index = output.indexOf(exist[0]);
+              // console.log(index);
+              var total = output[index].total + item.total;
+              Object.assign(output[index], item);
+              // console.log(total);
+              output[index].total = total;
+            } else{
+              if(typeof item.value == 'string'){
+                item.value = [item.value];
+              }
+              output.push(item);
+            }
+            });
+              output.sort(function(a, b) { return b.total - a.total; });
+
+              for (j = 0; j< output.length; j++){
+
+                console.log("og item")
+                console.log(output[j])
+                const temp = new Object();
+                  for (i=0; i<keys.length; i++)
+                  {
+                    // console.log(item["$$$"])
+                    // console.log(item[keys[i]])
+                    if (output[j].hasOwnProperty(keys[i]) === false)
+                    {
+                      // console.log(keys[i])
+                      // console.log(data[j][keys[i]])
+                      output[j][keys[i]] = 0;
+                      temp[keys[i]] = output[j][keys[i]]
+                      // temp[j] = {};
+                      // temp[j][keys[i] = data[j][keys[i]];
+                    }
+                    else{
+                      // console.log(keys[i])
+                      // console.log(data[j][keys[i]])
+                      temp[keys[i]] = output[j][keys[i]]
+                    }
+                    // console.log(temp);
+                  }
+                  newdata[j] = temp;
+                  console.log("new item")
+                  console.log(newdata[j])
+            };
+
+              console.log("keys")
+              console.log(keys)
+
+
+              console.log("output")
+              console.log(output)
+
+              console.log("newdata")
+              console.log(newdata)
+
+              console.log("d3")
+              console.log(d3.stack().keys(keys)(newdata))
+              // console.log(data)
+              // console.log(output)
+
+              var keys_color = ['$','$$','$$$','$$$$']
+
+              xScale.domain([0,350])
+
+
+              yScale.domain(output.map(function(d) {  return d["Zip Code"]; }));
+
+              zScale.domain(keys_color)
+              // console.log(output);
+
+              var div = d3.select("body").append("div")
+               .attr("class", "tooltip-donut")
+               .style("opacity", 0);
+
+              svg = d3.select("svg#bar")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                svg.append("g")
+                 .attr("class", "axis")
+                 .attr("transform", "translate(80,0)")
+                 .style("stroke","lightslategray")
+                 .call(d3.axisLeft(yScale));
+            svg.append("g")
+              .attr("class", "axis")
+              .attr("transform", "translate(80,440)")
+              .style("stroke","lightslategray")
+              .call(d3.axisBottom(xScale));
+
+            svg.selectAll(".bar")
+            .data(d3.stack().keys(keys_color)(newdata))
+            .enter().append("g")
+              .attr("fill", function(d) {return zScale(d.key) })
+            .selectAll("rect").data(function (d){ return d; })
+            .enter().append("rect")
+            .attr("transform", "translate(80,0)")
+            .attr("y", function(d) { return yScale(d.data["Zip Code"]) })
+            .attr("x", function(d) { return xScale(d[0]) })
+            .attr("width", function(d) {
+              return xScale(d[1]) - xScale(d[0]); })
+
+            .on("mouseover", function(d) {
+                    d3.select(this).transition()
+                           .duration('50')
+                           .attr('opacity', .50);
+
+                    div.transition()
+                           .duration(50)
+                           .style("opacity", 1)
+
+                  let format = d3.format(",")
+                  let key = Object.keys(d.data).find(key => d.data[key] === d[1]-d[0]);
+                  let alarmcount = d[1]-d[0];
+                  let time = 0;
+                  for (var i = 0; i< data.length;i++)
+                  {
+                    if (data[i][key] == alarmcount)
+                    {
+                      time = data[i][key+" time"];
+                    }
+                  }
+
+                  // console.log(key)
+                  // console.log(d[1]-d[0])
+                  // console.log(Object.values(data))
+                  div.html(" Price Category: " + key + "<br>" + "Zip Code: "+d.data["Zip Code"] + "<br>" +"Total Avg. Inspection Score: "+ format(d[1]-d[0])  + "<br>")
+                      .style("left", (d3.event.pageX - 30) + "px")
+                      .style("top", (d3.event.pageY - 15) + "px")
+
+            		})
+              .on("mouseout", function(d) {d3.select(this).transition()
+                           .duration('50')
+                           .attr('opacity', 1)
+                    div.transition()
+                           .duration('50')
+                           .style("opacity", 0)
+                }) 
+            .transition()
+            .duration(2000)//time in ms
+            .attr("height", function(d){
+                return yScale.bandwidth()
+            })
+
+            // svg.select("#legend")
+            // svg.append("circle").attr("cx",870).attr("cy",30).attr("r", 6).style("fill", "#65A9A3")
+            // svg.append("circle").attr("cx",870).attr("cy",50).attr("r", 6).style("fill", "#ED7A22")
+            // svg.append("circle").attr("cx",870).attr("cy",70).attr("r", 6).style("fill", "#ABA09C")
+            // svg.append("circle").attr("cx",870).attr("cy",100).attr("r", 6).style("fill", "#D73F47")
+            // svg.append("text").attr("x", 863).attr("y", 10).text("Call Type Group").style("font-size", "12px").attr("alignment-baseline","middle")
+            // svg.append("text").attr("x", 880).attr("y", 30).text("Alarm").style("font-size", "10px").attr("alignment-baseline","middle")
+            // svg.append("text").attr("x", 880).attr("y", 50).text("Fire").style("font-size", "10px").attr("alignment-baseline","middle")
+            // svg.append("text").attr("x", 880).attr("y", 70).text("Non").style("font-size", "10px").attr("alignment-baseline","middle")
+            // svg.append("text").attr("x", 880).attr("y", 80).text("Life Threatening").style("font-size", "10px").attr("alignment-baseline","middle")
+            // svg.append("text").attr("x", 880).attr("y", 100).text("Potentially").style("font-size", "10px").attr("alignment-baseline","middle");
+            // svg.append("text").attr("x", 880).attr("y", 110).text("Life Threatening").style("font-size", "10px").attr("alignment-baseline","middle")
+            //
+            // svg.append('text')
+            //     .attr('class', 'axis-title')
+            //     .attr('x', 37)
+            //     .attr('y',-5)
+            //     .attr('text-anchor', 'middle')
+            //     .style("font-size", "10px")
+            //     .text('Zip Code');
+            //
+            // svg.append('text')
+            //   .attr('class', 'axis-title')
+            //   .attr('x', 470)
+            //   .attr('y', 442)
+            //   .attr('dy', '1.75ex')
+            //   .attr('text-anchor', 'middle')
+            //   .style("font-size", "12px")
+            //   .text('Avg. Inspection Score');
+            //
+            //   svg.append('text')
+            //     .attr('class', 'title')
+            //     .attr('x', 442)
+            //     .attr('y',-25)
+            //     .attr('dy', '1.75ex')
+            //     .attr('text-anchor', 'middle')
+            //     .attr("font-weight", 600)
+            //     .style("font-size", "16")
+            //     .text('Bar Graph of the Avg. Inspection Score based on the areas in the last 10 years');
+
+            }
+
+            function translate(x, y) {
+              return 'translate(' + x + ',' + y + ')';
+            }
+
+            function midpoint(range) {
+                return range[0] + (range[1] - range[0]) / 2.0;
+              }
+
+
+            </script>
+
+
+  <div id="footer">
+  </div>
+  <script>
+  $(function(){
+    $("#footer").load("footer.html");
+  });
+  </script>
+
+  </body>
+
+</html>
