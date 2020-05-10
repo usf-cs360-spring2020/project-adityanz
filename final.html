@@ -280,234 +280,463 @@ d3.json(urls.basemap).then(function(json) {
   // d3.json(urls.muni).then(drawMuni)
   d3.csv(csv_data).then(drawArrests);
 });
+//
+// function convertRow(row, index) {
+//   // this will be our converted output row
+//   let out = {};
+//   //out.values = [];
+//   out.total;
+//   // this will be the values from each yyyy-mm column
+//   for (let col in row) {
+//     switch (col) {      // these are the text columns that do not need conversion
+//       // these are the columns that need to be converted to integers
+//       case 'Avg. Inspection Score':
+//           // out[col] = parseInt(row[col]);
+//           break;
+//       // these should be our time series values
+//
+//       // case 'Call Type Group':
+//       //   break;
+//       //
+//       // case 'Price':
+//       // // out[col] = row[col];
+//       // // var type = row[col];
+//       // //   out[type] = value;
+//       // // console.log(out[type])
+//       //   break;
+//
+//       case 'Zip Code':
+//         out[col] = row[col];
+//         break;
+//
+//       default:
+//       var type = row[col];
+//       // console.log(type);
+//       var value = parseInt(row['Avg. Inspection Score'])
+//       // console.log(value);
+//       // var type = value;
+//       out[type] = value;
+//       out.total = value;
+//       // var value = parseInt(row["Avg. Inspection Score"])
+//       // var time  = parseFloat(row["Price"]).toFixed(2);
+//       //  out[type] = value;
+//       //  // out[type+" zip code"] = zip code;
+//       //  out.total = value;
+//        break;
+//     }
+//   }
+//   console.log(out);
+//   return out;
+// }
 
-function oldStackedBarDataProcessing(row, index) {
+function convertRow(data) {
+  console.log(data);
+  let newdata = [];
   // this will be our converted output row
-  let out = {};
-  //out.values = [];
-  out.total;
   // this will be the values from each yyyy-mm column
-  for (let col in row) {
-    switch (col) {      // these are the text columns that do not need conversion
-      // these are the columns that need to be converted to integers
-      case 'Avg. Inspection Score':
-          // out[col] = parseInt(row[col]);
+  for (var i = 0; i< data.length; i++)
+  {
+    let out = {};
+    //out.values = [];
+    out.total;
+    var row = data[i];
+    var colarr = Object.keys(row);
+    for (let colidx in colarr) {
+      var col = colarr[colidx]
+      // console.log(col)
+      switch (col) {      // these are the text columns that do not need conversion
+        // these are the columns that need to be converted to integers
+        case 'Inspection Score':
+            // out[col] = parseInt(row[col]);
+            break;
+        // these should be our time series values
+
+        // case 'Call Type Group':
+        //   break;
+        //
+        // case 'Price':
+        // // out[col] = row[col];
+        // // var type = row[col];
+        // //   out[type] = value;
+        // // console.log(out[type])
+        //   break;
+
+        case 'Zip Code':
+          // console.log(data[i][col]);
+          out[col] = data[i][col];
           break;
-      // these should be our time series values
 
-      // case 'Call Type Group':
-      //   break;
-      //
-      // case 'Price':
-      // // out[col] = row[col];
-      // // var type = row[col];
-      // //   out[type] = value;
-      // // console.log(out[type])
-      //   break;
-
-      case 'Zip Code':
-        out[col] = row[col];
-        break;
-
-      default:
-      var type = row[col];
-      // console.log(type);
-      var value = parseInt(row['Avg. Inspection Score'])
-      // console.log(value);
-      // var type = value;
-      out[type] = value;
-      out.total = value;
-      // var value = parseInt(row["Avg. Inspection Score"])
-      // var time  = parseFloat(row["Price"]).toFixed(2);
-      //  out[type] = value;
-      //  // out[type+" zip code"] = zip code;
-      //  out.total = value;
-       break;
+        default:
+        var type = data[i]["Price"];
+        var value = parseInt(data[i]["Inspection Score"])
+        console.log("type");
+        console.log(type);
+        console.log("value");
+        console.log(value);
+        // var type = value;
+        out[type] = value;
+        out.total = value;
+        // var value = parseInt(row["Avg. Inspection Score"])
+        // var time  = parseFloat(row["Price"]).toFixed(2);
+        //  out[type] = value;
+        //  // out[type+" zip code"] = zip code;
+        //  out.total = value;
+        newdata[i] = out;
+         break;
+      }
+      // console.log(newdata);
     }
   }
-  console.log(out);
-  return out;
+  console.log(newdata);
+  return newdata;
 }
 
-            function drawStackedBar(data) {
+function drawMain(data) {
 
-              console.log(data)
-              var newdata = []
-              var output = []
-
-
-              var keys = ['$','$$','$$$','$$$$']
-             var i;
-              var j;
-              // console.log(data)
+  console.log("data")
+  console.log(data)
+  var newdata = []
+  var output = []
 
 
-              // console.log(data['$']);
-
-              data.forEach(function(item){
-                var exist = output.filter(function(v,i){
-                return v["Zip Code"] == item["Zip Code"];
-                });
-              if(exist.length){
-              var index = output.indexOf(exist[0]);
-              console.log(index);
-              var total = output[index].total + item.total;
-              console.log(total);
-              Object.assign(output[index], item);
-              output[index].total = total;
-              } else{
-              if(typeof item.value == 'string'){
-                item.value = [item.value];
-              }
-              console.log(item);
-              output.push(item);
-              }
-              });
-              output.sort(function(a, b) { return b.total - a.total; });
-              console.log(output);
-              //
-              // console.log("out")
-              console.log(output)
-
-              for (j = 0; j< output.length; j++){
-
-                console.log("og item")
-                console.log(output[j])
-                const temp = new Object();
-                  for (i=0; i<keys.length; i++)
-                  {
-                    temp["Zip Code"] = output[j]["Zip Code"];
-                    // console.log(item["$$$"])
-                    // console.log(item[keys[i]])
-                    // console.log(output[j]["Price"] == keys[i]);
-                    if (output[j]["Price"] == keys[i])
-                    {
-                      // console.log(keys[i])
-                      // console.log(output[j])
-                      // console.log(output[j]["Price"])
-                      // console.log(output[j]["Inspection Score"])
-                      var dollarsign = output[j]["Price"];
-                      var score = parseInt(output[j]["Inspection Score"]);
-                      temp[dollarsign] = score;
-
-                      // temp[j][dollarsign]= 0;
-                      // temp[j][dollarsign]= score;
-                      // temp[j] = {};
-                      // temp[j][keys[i] = data[j][keys[i]];
-                    }
-                    else{
-                      var dollarsign = keys[i];
-                      var score = 0;
-                      temp[dollarsign] = score;
-                      // temp[j][dollarsign]=score;
-                    }
-                    console.log(temp);
-                  }
-                  newdata[j] = temp;
-                  console.log("new item")
-                  console.log(newdata[j])
-            };
-
-              console.log("keys")
-              console.log(keys)
+  var keys = ['$','$$','$$$','$$$$','total', 'Zip Code']
+  var i;
+  var j;
+  // console.log(data)
 
 
-              console.log("output")
-              console.log(output)
+// console.log(data['$']);
 
-              console.log("newdata")
-              console.log(newdata)
+  data.forEach(function(item){
+  var exist = output.filter(function(v,i){
+  return v["Zip Code"] == item["Zip Code"];
+});
+if(exist.length){
+  var index = output.indexOf(exist[0]);
+  // console.log(index);
+  var total = output[index].total + item.total;
+  Object.assign(output[index], item);
+  // console.log(total);
+  output[index].total = total;
+} else{
+  if(typeof item.value == 'string'){
+    item.value = [item.value];
+  }
+  output.push(item);
+}
+});
+  output.sort(function(a, b) { return b.total - a.total; });
 
-              // console.log(data)
-              // console.log(output)
+  for (j = 0; j< output.length; j++){
 
-              var keys_color = ['$','$$','$$$','$$$$']
+    console.log("og item")
+    console.log(output[j])
+    const temp = new Object();
+      for (i=0; i<keys.length; i++)
+      {
+        // console.log(item["$$$"])
+        // console.log(item[keys[i]])
+        if (output[j].hasOwnProperty(keys[i]) === false)
+        {
+          // console.log(keys[i])
+          // console.log(data[j][keys[i]])
+          output[j][keys[i]] = 0;
+          temp[keys[i]] = output[j][keys[i]]
+          // temp[j] = {};
+          // temp[j][keys[i] = data[j][keys[i]];
+        }
+        else{
+          // console.log(keys[i])
+          // console.log(data[j][keys[i]])
+          temp[keys[i]] = output[j][keys[i]]
+        }
+        // console.log(temp);
+      }
+      newdata[j] = temp;
+      console.log("new item")
+      console.log(newdata[j])
+};
 
-              xScale.domain([0,350])
+  console.log("keys")
+  console.log(keys)
 
 
-              yScale.domain(output.map(function(d) {  return d["Zip Code"]; }));
+  console.log("output")
+  console.log(output)
 
-              zScale.domain(keys_color)
-              // console.log(output);
+  console.log("newdata")
+  console.log(newdata)
 
-              d3.selectAll("svg#bar > *").remove();
+  console.log("d3")
+  console.log(d3.stack().keys(keys)(newdata))
+  // console.log(data)
+  // console.log(output)
 
-              var div = d3.select("body").append("div")
-               .attr("class", "tooltip-donut")
-               .style("opacity", 0);
+  var keys_color = ['$','$$','$$$','$$$$']
 
-              svg = d3.select("svg#bar")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-                svg.append("g")
-                 .attr("class", "axis")
-                 .attr("transform", "translate(80,0)")
-                 .style("stroke","lightslategray")
-                 .call(d3.axisLeft(yScale));
-            svg.append("g")
-              .attr("class", "axis")
-              .attr("transform", "translate(80,440)")
-              .style("stroke","lightslategray")
-              .call(d3.axisBottom(xScale));
+  xScale.domain([0,350])
 
-            svg.selectAll(".bar")
-            .data(d3.stack().keys(keys_color)(newdata))
-            .enter().append("g")
-              .attr("fill", function(d) {return zScale(d.key) })
-            .selectAll("rect").data(function (d){ return d; })
-            .enter().append("rect")
-            .attr("transform", "translate(80,0)")
-            .attr("y", function(d) { return yScale(d.data["Zip Code"]) })
-            .attr("x", function(d) { return xScale(d[0]) })
-            .attr("width", function(d) {
-              return xScale(d[1]) - xScale(d[0]); })
 
-            .on("mouseover", function(d) {
-                    d3.select(this).transition()
-                           .duration('50')
-                           .attr('opacity', .50);
+  yScale.domain(output.map(function(d) {  return d["Zip Code"]; }));
 
-                    div.transition()
-                           .duration(50)
-                           .style("opacity", 1)
+  zScale.domain(keys_color)
+  // console.log(output);
 
-                  let format = d3.format(",")
-                  let key = Object.keys(d.data).find(key => d.data[key]);
-                  console.log("YO")
-                  console.log(Object.keys(d.data))
-                  // let alarmcount = d[1]-d[0];
-                  // let time = 0;
-                  // for (var i = 0; i< data.length;i++)
-                  // {
-                  //   if (data[i][key] == alarmcount)
-                  //   {
-                  //     time = data[i][key+" time"];
-                  //   }
-                  // }
+  d3.selectAll("svg#bar > *").remove();
 
-                  // console.log(key)
-                  // console.log(d[1]-d[0])
-                  // console.log(Object.values(data))
-                  div.html("Price Category: " + key+ "<br>" + "Zip Code: "+d.data["Zip Code"] + "<br>" +"Total Avg. Inspection Score: "+ format(d[1]-d[0])  + "<br>")
-                      .style("left", (d3.event.pageX - 30) + "px")
-                      .style("top", (d3.event.pageY - 15) + "px")
+  var div = d3.select("body").append("div")
+   .attr("class", "tooltip-donut")
+   .style("opacity", 0);
 
-            		})
-              .on("mouseout", function(d) {d3.select(this).transition()
-                           .duration('50')
-                           .attr('opacity', 1)
-                    div.transition()
-                           .duration('50')
-                           .style("opacity", 0)
-                }) 
-            .transition()
-            .duration(2000)//time in ms
-            .attr("height", function(d){
-                return yScale.bandwidth()
-            })
+  svg = d3.select("svg#bar")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    svg.append("g")
+     .attr("class", "axis")
+     .attr("transform", "translate(80,0)")
+     .style("stroke","lightslategray")
+     .call(d3.axisLeft(yScale));
+svg.append("g")
+  .attr("class", "axis")
+  .attr("transform", "translate(80,440)")
+  .style("stroke","lightslategray")
+  .call(d3.axisBottom(xScale));
+
+svg.selectAll(".bar")
+.data(d3.stack().keys(keys_color)(newdata))
+.enter().append("g")
+  .attr("fill", function(d) {return zScale(d.key) })
+.selectAll("rect").data(function (d){ return d; })
+.enter().append("rect")
+.attr("transform", "translate(80,0)")
+.attr("y", function(d) { return yScale(d.data["Zip Code"]) })
+.attr("x", function(d) { return xScale(d[0]) })
+.attr("width", function(d) {
+  return xScale(d[1]) - xScale(d[0]); })
+
+.on("mouseover", function(d) {
+        d3.select(this).transition()
+               .duration('50')
+               .attr('opacity', .50);
+
+        div.transition()
+               .duration(50)
+               .style("opacity", 1)
+
+      let format = d3.format(",")
+      let key = Object.keys(d.data).find(key => d.data[key] === d[1]-d[0]);
+      let alarmcount = d[1]-d[0];
+      let time = 0;
+      for (var i = 0; i< data.length;i++)
+      {
+        if (data[i][key] == alarmcount)
+        {
+          time = data[i][key+" time"];
+        }
+      }
+
+      // console.log(key)
+      // console.log(d[1]-d[0])
+      // console.log(Object.values(data))
+      div.html(" Price Category: " + key + "<br>" + "Zip Code: "+d.data["Zip Code"] + "<br>" +"Total Avg. Inspection Score: "+ format(d[1]-d[0])  + "<br>")
+          .style("left", (d3.event.pageX - 30) + "px")
+          .style("top", (d3.event.pageY - 15) + "px")
+
+    })
+  .on("mouseout", function(d) {d3.select(this).transition()
+               .duration('50')
+               .attr('opacity', 1)
+        div.transition()
+               .duration('50')
+               .style("opacity", 0)
+    }) 
+.transition()
+.duration(2000)//time in ms
+.attr("height", function(d){
+    return yScale.bandwidth()
+})
+
+            // function drawStackedBar(data) {
+            //
+            //   console.log(data)
+            //   var newdata = []
+            //   var output = []
+            //
+            //
+            //   var keys = ['$','$$','$$$','$$$$']
+            //  var i;
+            //   var j;
+            //   // console.log(data)
+            //
+            //
+            //   // console.log(data['$']);
+            //
+            //   data.forEach(function(item){
+            //     var exist = output.filter(function(v,i){
+            //     return v["Zip Code"] == item["Zip Code"];
+            //     });
+            //   if(exist.length){
+            //   var index = output.indexOf(exist[0]);
+            //   console.log(index);
+            //   var total = output[index].total + item.total;
+            //   console.log(total);
+            //   Object.assign(output[index], item);
+            //   output[index].total = total;
+            //   } else{
+            //   if(typeof item.value == 'string'){
+            //     item.value = [item.value];
+            //   }
+            //   console.log(item);
+            //   output.push(item);
+            //   }
+            //   });
+            //   output.sort(function(a, b) { return b.total - a.total; });
+            //   console.log(output);
+            //   //
+            //   // console.log("out")
+            //   console.log(output)
+            //
+            //   for (j = 0; j< output.length; j++){
+            //
+            //     console.log("og item")
+            //     console.log(output[j])
+            //     const temp = new Object();
+            //       for (i=0; i<keys.length; i++)
+            //       {
+            //         temp["Zip Code"] = output[j]["Zip Code"];
+            //         // console.log(item["$$$"])
+            //         // console.log(item[keys[i]])
+            //         // console.log(output[j]["Price"] == keys[i]);
+            //         if (output[j]["Price"] == keys[i])
+            //         {
+            //           // console.log(keys[i])
+            //           // console.log(output[j])
+            //           // console.log(output[j]["Price"])
+            //           // console.log(output[j]["Inspection Score"])
+            //           var dollarsign = output[j]["Price"];
+            //           var score = parseInt(output[j]["Inspection Score"]);
+            //           temp[dollarsign] = score;
+            //
+            //           // temp[j][dollarsign]= 0;
+            //           // temp[j][dollarsign]= score;
+            //           // temp[j] = {};
+            //           // temp[j][keys[i] = data[j][keys[i]];
+            //         }
+            //         else{
+            //           var dollarsign = keys[i];
+            //           var score = 0;
+            //           temp[dollarsign] = score;
+            //           // temp[j][dollarsign]=score;
+            //         }
+            //         console.log(temp);
+            //       }
+            //       newdata[j] = temp;
+            //       console.log("new item")
+            //       console.log(newdata[j])
+            // };
+            //
+            //   console.log("keys")
+            //   console.log(keys)
+            //
+            //
+            //   console.log("output")
+            //   console.log(output)
+            //
+            //   console.log("newdata")
+            //   console.log(newdata)
+            //
+            //   // console.log(data)
+            //   // console.log(output)
+            //
+            //   var keys_color = ['$','$$','$$$','$$$$']
+            //
+            //   xScale.domain([0,350])
+            //
+            //
+            //   yScale.domain(output.map(function(d) {  return d["Zip Code"]; }));
+            //
+            //   zScale.domain(keys_color)
+            //   // console.log(output);
+            //
+            //   d3.selectAll("svg#bar > *").remove();
+            //
+            //   var div = d3.select("body").append("div")
+            //    .attr("class", "tooltip-donut")
+            //    .style("opacity", 0);
+            //
+            //   svg = d3.select("svg#bar")
+            //     .attr("width", width + margin.left + margin.right)
+            //     .attr("height", height + margin.top + margin.bottom)
+            //     .append("g")
+            //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            //     svg.append("g")
+            //      .attr("class", "axis")
+            //      .attr("transform", "translate(80,0)")
+            //      .style("stroke","lightslategray")
+            //      .call(d3.axisLeft(yScale));
+            // svg.append("g")
+            //   .attr("class", "axis")
+            //   .attr("transform", "translate(80,440)")
+            //   .style("stroke","lightslategray")
+            //   .call(d3.axisBottom(xScale));
+            //
+            // svg.selectAll(".bar")
+            // .data(d3.stack().keys(keys_color)(newdata))
+            // .enter().append("g")
+            //   .attr("fill", function(d) {return zScale(d.key) })
+            // .selectAll("rect").data(function (d){ return d; })
+            // .enter().append("rect")
+            // .attr("transform", "translate(80,0)")
+            // .attr("y", function(d) { return yScale(d.data["Zip Code"]) })
+            // .attr("x", function(d) { return xScale(d[0]) })
+            // .attr("width", function(d) {
+            //   return xScale(d[1]) - xScale(d[0]); })
+            //
+            // .on("mouseover", function(d) {
+            //         d3.select(this).transition()
+            //                .duration('50')
+            //                .attr('opacity', .50);
+            //
+            //         div.transition()
+            //                .duration(50)
+            //                .style("opacity", 1)
+            //
+            //       let format = d3.format(",")
+            //       let key = Object.keys(d.data).find(key => d.data[key]);
+            //       console.log("YO")
+            //       console.log(Object.keys(d.data))
+            //       // let alarmcount = d[1]-d[0];
+            //       // let time = 0;
+            //       // for (var i = 0; i< data.length;i++)
+            //       // {
+            //       //   if (data[i][key] == alarmcount)
+            //       //   {
+            //       //     time = data[i][key+" time"];
+            //       //   }
+            //       // }
+            //
+            //       // console.log(key)
+            //       // console.log(d[1]-d[0])
+            //       // console.log(Object.values(data))
+            //       div.html("Price Category: " + key+ "<br>" + "Zip Code: "+d.data["Zip Code"] + "<br>" +"Total Avg. Inspection Score: "+ format(d[1]-d[0])  + "<br>")
+            //           .style("left", (d3.event.pageX - 30) + "px")
+            //           .style("top", (d3.event.pageY - 15) + "px")
+            //
+            // 		})
+            //   .on("mouseout", function(d) {d3.select(this).transition()
+            //                .duration('50')
+            //                .attr('opacity', 1)
+            //         div.transition()
+            //                .duration('50')
+            //                .style("opacity", 0)
+            //     }) 
+            // .transition()
+            // .duration(2000)//time in ms
+            // .attr("height", function(d){
+            //     return yScale.bandwidth()
+            // })
 
             // svg.select("#legend")
             // svg.append("circle").attr("cx",870).attr("cy",30).attr("r", 6).style("fill", "#65A9A3")
@@ -799,7 +1028,7 @@ function drawArrests(json) {
 
     });
 
-    console.log(filteredData);
+    // console.log(filteredData);
 
 var bar_data = filteredData.map(function(d) {
   return {
@@ -808,6 +1037,13 @@ var bar_data = filteredData.map(function(d) {
             'Inspection Score': d["Inspection Score"]
           }
 });
+console.log(bar_data);
+bar_data_sorted = convertRow(bar_data);
+drawMain(bar_data_sorted);
+
+
+// csv_data = convertToCsv(bar_data);
+// console.log(csv_data);
 // console.log(bar_data);
 // let out = {};
 // var k =0;
@@ -830,7 +1066,20 @@ var bar_data = filteredData.map(function(d) {
 // }
 // console.log(out);
 // d3.csv(bar_data, convertRow).then(drawMain);
-drawStackedBar(bar_data);
+// drawStackedBar(bar_data);
+
+// function convertToCsv(data) {
+//   console.log(data);
+//     var csvArray = ['Price','Zip Code','Inspection Score'];
+//     data.forEach(function(d) {
+//         csvArray.push(d["Price"] + ',' + d["Zip Code"] + ',' +d["Inspection Score"]);
+//     });
+//     console.log(csvArray)
+//     return csvArray.join("\n");
+// }
+
+// d3.csv(csv_data, convertRow).then(drawMain);
+
 
         // console.log(bar_data);
 
