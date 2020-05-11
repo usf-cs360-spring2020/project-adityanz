@@ -117,7 +117,7 @@ div.tooltip-donut {
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="https://unpkg.com/d3-simple-slider"></script>
+    <!-- <script src="https://unpkg.com/d3-simple-slider"></script> -->
 
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 
@@ -156,11 +156,11 @@ div.tooltip-donut {
            </div>
 
            <div></div>
+           <svg width="960" height="600" id="vis2"> </svg>
+           <div></div>
 
           <svg width="960" height="600" class="aditya" id="bar"></svg>
 
-          <div></div>
-          <svg width="960" height="600" id="vis2"> </svg>
 
           </div>
             </section>
@@ -168,7 +168,8 @@ div.tooltip-donut {
             <script>
 
             // location of data files
-            let csv_data = 'small.csv';
+            // let csv_data = 'small.csv';
+            let csv_data= 'finaldata.csv';
 
 
             let config = {
@@ -190,7 +191,7 @@ div.tooltip-donut {
             config.plot.width = config.svg.width - config.margin.left - config.margin.right;
             config.plot.height = config.svg.height - config.margin.top - config.margin.bottom;
 
-            let margin = {top: 10, right: 10, bottom: 10, left: 10}
+            let margin = {top: 20, right: 20, bottom: 40, left: 20}
               , width =960
               , height = 450
 
@@ -518,7 +519,49 @@ svg3.selectAll(".bar")
 .duration(2000)//time in ms
 .attr("height", function(d){
     return yScale.bandwidth()
-})}
+})
+
+svg3.select("#legend")
+svg3.append("circle").attr("cx",920).attr("cy",10).attr("r", 6).style("fill", "#D73F47")
+svg3.append("circle").attr("cx",920).attr("cy",30).attr("r", 6).style("fill", "#ABA09C")
+svg3.append("circle").attr("cx",920).attr("cy",50).attr("r", 6).style("fill", "#ED7A22")
+svg3.append("circle").attr("cx",920).attr("cy",70).attr("r", 6).style("fill", "#65A9A3")
+svg3.append("text").attr("x", 910).attr("y", -5).text("Price").style("font-size", "12px").attr("alignment-baseline","middle")
+svg3.append("text").attr("x", 930).attr("y", 10).text("$").style("font-size", "10px").attr("alignment-baseline","middle")
+svg3.append("text").attr("x", 930).attr("y", 30).text("$$").style("font-size", "10px").attr("alignment-baseline","middle")
+svg3.append("text").attr("x", 930).attr("y", 50).text("$$$").style("font-size", "10px").attr("alignment-baseline","middle")
+svg3.append("text").attr("x", 930).attr("y", 70).text("$$$$").style("font-size", "10px").attr("alignment-baseline","middle");
+
+svg3.append('text')
+    .attr('class', 'axis-title')
+    .attr('x', 37)
+    .attr('y',-5)
+    .attr('text-anchor', 'middle')
+    .style("font-size", "10px")
+    .text('Zip Code');
+
+svg3.append('text')
+  .attr('class', 'axis-title')
+  .attr('x', 470)
+  .attr('y', 464)
+  .attr('dy', '1.75ex')
+  .attr('text-anchor', 'middle')
+  .style("font-size", "12px")
+  .text('Average Inspection Score');
+
+  svg3.append('text')
+    .attr('class', 'title')
+    .attr('x', 442)
+    .attr('y',-25)
+    .attr('dy', '1.75ex')
+    .attr('text-anchor', 'middle')
+    .attr("font-weight", 600)
+    .style("font-size", "16")
+    // .text('Bar Graph of the Number of Alarms based on the areas in the last 10 years');
+
+
+}
+
 
 function dataprocess(dataset)
 {
@@ -526,7 +569,8 @@ function dataprocess(dataset)
   .key(function(d) {return d["City"]; })
   .key(function(d) {return d["Zip Code"]; })
   .key(function(d) {return d["Title"]; })
-
+  .key(function(d) {return d["Business Id"]; })
+  // .values(function(d) {return d["Business Id"]; })
   .rollup(function(leaves) { return leaves.length; })
   .entries(dataset);
 
@@ -538,10 +582,9 @@ function dataprocess(dataset)
 
   // root.count()
   //
-  // root.each(function(node) {
-  //   // copy this calculation since value is sometimes overwritten
-  //   node.data.leaves = node.value;
-  // })
+  root.each(function(node) {
+    node.id = node.value;
+  })
   root.sort(function(a, b) {
     return b.height - a.height || b.count - a.count;
   });
@@ -619,10 +662,20 @@ function drawNodes(g, nodes, raise) {
       .attr('class', 'node')
       .style('fill', d => color(d.depth));
 
-  setupEvents(g, circles, raise);
+    setupEvents(g,circles, false, graph, basemap, arrests)
 }
 
-function setupEvents(g, selection, raise) {
+function setupEvents(g, selection, raise, f, basemap, arrests) {
+  // console.log(g)
+  console.log("basemap")
+  console.log(basemap)
+  // console.log(selection)
+  console.log("arrests")
+  console.log(arrests)
+  console.log("symbols")
+  console.log(symbols)
+  // console.log(raise)
+  // console.log(g)
 
   selection.on('mouseover.highlight', function(d) {
     // https://github.com/d3/d3-hierarchy#node_path
@@ -665,6 +718,7 @@ return !path.includes(item);})
       selection.on('mouseover.tooltip', function(d) {
         showTooltip(g, d3.select(this));
       });
+      data_finder_inside(d);
   });
 
 
@@ -672,7 +726,76 @@ return !path.includes(item);})
   selection.on('mouseout.tooltip', function(d) {
     g.select("#tooltip").remove();
   });
+
+  symbols.on("mouseover", function(d) {
+    // d3.select(this).raise();
+    // d3.select(this).classed("active", true);
+
+
+      symbols.on("mouseout", function(d) {
+        // d3.select(this).classed("active", false);
+        // details.style("visibility", "hidden");
+      });
+
+  // use template literal for the detail table
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+  const html = `
+    <table border="0" cellspacing="0" cellpadding="2">
+    <tbody>
+      <tr>
+        <th>Name:</th>
+        <td>${d['Name']}</td>
+      </tr>
+      <tr>
+        <th>Address:</th>
+        <td>${d['Address']}</td>
+      </tr>
+      <tr>
+        <th>Recent Health Inspection Score:</th>
+        <td>${d['Inspection Score']}</td>
+      </tr>
+      <tr>
+        <th>Risk Category:</th>
+        <td>${d['Risk Category Improved']}</td>
+      </tr>
+      <tr>
+        <th>Yelp Rating:</th>
+        <td>${d['Rating']}</td>
+      </tr>
+    </tbody>
+    </table>
+  `;
+
+  body.html(html);
+  details.style("visibility", "visible");
+  });
+
 }
+
+function data_finder_inside(name){
+  console.log("THE NAME")
+  console.log(name);
+  console.log("inside data data_finder_inside")
+  console.log(symbols);
+  // console.log(arrests);
+    symbols["_groups"][0].forEach(function(path) {
+      console.log("outside if")
+      console.log(path["__data__"]["Zip Code"])
+      console.log(name.data)
+      console.log("path on")
+      console.log(path["__on"])
+      console.log("path data")
+      console.log(path["__data__"])
+      if (path["__data__"]["Zip Code"] == name.data.key){
+        console.log("inside if")
+        console.log(path["__on"][0])
+        console.log(path["__data__"])
+        console.log(path["__on"][0].value(path["__data__"]))
+          path["__on"][0].value(path["__data__"]);
+          // path["__on"][2].value(path["__data__"]);
+      }
+    });
+  }
 
 function showTooltip(g, node) {
   let gbox = g.node().getBBox();     // get bounding box of group BEFORE adding text
@@ -728,55 +851,13 @@ function showTooltip(g, node) {
   }
 }
 
-function maptooltip()
-{
-
-  var symbols = g.arrests.selectAll("circle")
-
-  symbols.on("mouseover", function(d) {
-    d3.select(this).raise();
-    d3.select(this).classed("active", true);
-
-
-      symbols.on("mouseout", function(d) {
-        d3.select(this).classed("active", false);
-        details.style("visibility", "hidden");
-      });
-
-  // use template literal for the detail table
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
-  const html = `
-    <table border="0" cellspacing="0" cellpadding="2">
-    <tbody>
-      <tr>
-        <th>Name:</th>
-        <td>${d['Name']}</td>
-      </tr>
-      <tr>
-        <th>Address:</th>
-        <td>${d['Address']}</td>
-      </tr>
-      <tr>
-        <th>Recent Health Inspection Score:</th>
-        <td>${d['Inspection Score']}</td>
-      </tr>
-      <tr>
-        <th>Risk Category:</th>
-        <td>${d['Risk Category Improved']}</td>
-      </tr>
-      <tr>
-        <th>Yelp Rating:</th>
-        <td>${d['Rating']}</td>
-      </tr>
-    </tbody>
-    </table>
-  `;
-
-  body.html(html);
-  details.style("visibility", "visible");
-  });
-
-}
+// function maptooltip()
+// {
+//
+//   var symbols = g.arrests.selectAll("circle")
+//
+//
+// }
 
 function toCartesian(r, theta) {
   return {
@@ -792,17 +873,26 @@ function toPolar(x, y) {
   };
 }
 
-function drawBasemap(json) {
-  console.log("basemap", json);
+let basemap;
+let outline;
+let graph;
 
-  const basemap = g.basemap.selectAll("path.land")
+function drawBasemap(json) {
+  graph = g;
+  console.log("basemap", json);
+  console.log("GG!")
+console.log(g);
+console.log(urls);
+console.log(json);
+
+   basemap = g.basemap.selectAll("path.land")
     .data(json.features)
     .enter()
     .append("path")
     .attr("d", path)
     .attr("class", "land");
 
-  const outline = g.outline.selectAll("path.neighborhood")
+   outline = g.outline.selectAll("path.neighborhood")
       .data(json.features)
       .enter()
       .append("path")
@@ -814,29 +904,32 @@ function drawBasemap(json) {
         d.properties.outline = this;
       });
 
-  // add highlight
-  basemap.on("mouseover.highlight", function(d) {
-    d3.select(d.properties.outline).raise();
-    d3.select(d.properties.outline).classed("active", true);
-  })
-  .on("mouseout.highlight", function(d) {
-    d3.select(d.properties.outline).classed("active", false);
-  });
+      // add highlight
+      basemap.on("mouseover.highlight", function(d) {
+        d3.select(d.properties.outline).raise();
+        d3.select(d.properties.outline).classed("active", true);
+      })
+      .on("mouseout.highlight", function(d) {
+        d3.select(d.properties.outline).classed("active", false);
+      });
 
-  // add tooltip
-  basemap.on("mouseover.tooltip", function(d) {
-    tip.text(d.properties.nhood);
-    tip.style("visibility", "visible");
-  })
-  .on("mousemove.tooltip", function(d) {
-    const coords = d3.mouse(g.basemap.node());
-    tip.attr("x", coords[0]);
-    tip.attr("y", coords[1]);
-  })
-  .on("mouseout.tooltip", function(d) {
-    tip.style("visibility", "hidden");
-  });
-}
+      // add tooltip
+      basemap.on("mouseover.tooltip", function(d) {
+        tip.text(d.properties.nhood);
+        tip.style("visibility", "visible");
+      })
+      .on("mousemove.tooltip", function(d) {
+        const coords = d3.mouse(g.basemap.node());
+        tip.attr("x", coords[0]);
+        tip.attr("y", coords[1]);
+      })
+      .on("mouseout.tooltip", function(d) {
+        tip.style("visibility", "hidden");
+      });
+      // setupEvents(g, selection, raise, f, basemap)
+      // setupEvents(plot,circles, true, g, basemap)
+      // CALL SETUPEVENTS
+  }
 
 function drawStreets(json) {
   console.log("streets", json);
@@ -856,12 +949,12 @@ function drawStreets(json) {
     .attr("class", "street");
 
     svg2.select("#legend")
-    svg2.append("circle").attr("cx",870).attr("cy",30).attr("r", 6).style("fill", "#000000")
-    svg2.append("circle").attr("cx",870).attr("cy",50).attr("r", 6).style("fill", "#FF0000")
-    svg2.append("circle").attr("cx",870).attr("cy",70).attr("r", 6).style("fill", "#0000ff")
-    svg2.append("circle").attr("cx",870).attr("cy",90).attr("r", 6).style("fill", "#FF7F00")
-    svg2.append("circle").attr("cx",870).attr("cy",110).attr("r", 6).style("fill", "#6a0dad")
-    svg2.append("text").attr("x", 800).attr("y", 10).text("Yelp Rating").style("font-size", "12px").attr("alignment-baseline","middle")
+    svg2.append("circle").attr("cx",870).attr("cy",30).attr("r", 6).style("fill", "#FF0000")
+    svg2.append("circle").attr("cx",870).attr("cy",50).attr("r", 6).style("fill", "#0000ff")
+    svg2.append("circle").attr("cx",870).attr("cy",70).attr("r", 6).style("fill", "#FF7F00")
+    svg2.append("circle").attr("cx",870).attr("cy",90).attr("r", 6).style("fill", "#6a0dad")
+    svg2.append("circle").attr("cx",870).attr("cy",110).attr("r", 6).style("fill", "#FFFF00")
+    svg2.append("text").attr("x", 870).attr("y", 10).text("Yelp Rating").style("font-size", "12px").attr("alignment-baseline","middle")
     svg2.append("text").attr("x", 880).attr("y", 30).text("Between 1 and 2").style("font-size", "10px").attr("alignment-baseline","middle")
     svg2.append("text").attr("x", 880).attr("y", 50).text("Between 2 and 3").style("font-size", "10px").attr("alignment-baseline","middle")
     svg2.append("text").attr("x", 880).attr("y", 70).text("Between 3 and 4").style("font-size", "10px").attr("alignment-baseline","middle")
@@ -869,15 +962,15 @@ function drawStreets(json) {
     svg2.append("text").attr("x", 880).attr("y", 110).text("5 stars!").style("font-size", "10px").attr("alignment-baseline","middle")
 
 
-    svg2.append('text')
-    .attr('class', 'title')
-    .attr('x', 500)
-    .attr('y',0)
-    .attr('dy', '1.75ex')
-    .attr('text-anchor', 'middle')
-    .attr("font-weight", 600)
-    .style("font-size", "16")
-    // .text('MUNI 311 Calls for Feburary 2020 in SF');
+    //
+    // svg2.append('text')
+    // .attr('class', 'title')
+    // .attr('x', 500)
+    // .attr('y',0)
+    // .attr('dy', '1.75ex')
+    // .attr('text-anchor', 'middle')
+    // .attr("font-weight", 600)
+    // .style("font-size", "16")
 
 }
 
@@ -959,9 +1052,22 @@ function dropdown_filter(json, value)
       });
     drawVis(filteredData);
 }
+var x;
+var y;
 
+let symbols;
 function drawMap(json)
 {
+  var count = 1
+  var radius  = 5
+  if (count == 1)
+  {
+    radius = 5;
+  }
+  else {
+    radius = 3/d3.event.transform.k;
+  }
+  count++
   console.log("UPDATE THE MAP!")
   console.log("draw me!");
   console.log(json);
@@ -976,13 +1082,15 @@ function drawMap(json)
 
   g.arrests.selectAll("circle").remove();
 
-  var symbols = g.arrests.selectAll("circle")
+  symbols = g.arrests.selectAll("circle")
   .data(json)
       .enter()
       .append("circle")
       .attr("cx", d => d.x)
       .attr("cy", d => d.y)
-      .attr("r", 5)
+      .attr("r", 3)
+      .attr("id", d=> d["Business Id"])
+      .attr("zip", d=> d["Zip Code"])
       .attr("class", "symbol")
       .style("fill","000000")
 
@@ -991,9 +1099,10 @@ function drawMap(json)
       symbols.filter(d => d['Rating'] >= 2 &&  d['Rating'] < 3).style("fill","0000ff")
       symbols.filter(d => d['Rating'] >= 3 &&  d['Rating'] < 4).style("fill","FF7F00")
       symbols.filter(d => d['Rating'] >= 4 &&  d['Rating'] < 5).style("fill","6a0dad")
-      symbols.filter(d => d['Rating'] == 5).style("fill","6a0dad");
+      symbols.filter(d => d['Rating'] == 5).style("fill","FFFF00");
 
-      maptooltip(json)
+      // maptooltip(json)
+
 
   var zoom = d3.zoom()
   .scaleExtent([1, 8])
@@ -1003,10 +1112,16 @@ function drawMap(json)
             svg2.select("g#arrests").selectAll("circle")
             // console.log("this ffer",d3.event.transform)
             .attr('transform', d3.event.transform)
-            .attr("r", 3/d3.event.transform.k);
+            .attr("r", 2/d3.event.transform.k);
   });
 
-  svg2.call(zoom);
+  svg2.call(zoom)
+
+  d3.select("body").on("keypress", function() {
+  svg2.transition().duration(500).call(zoom.transform, d3.zoomIdentity)
+  svg2.select("g#arrests").selectAll("circle").attr("r", 1/(3/d3.event.transform.k))
+});
+
 }
 
 
@@ -1016,7 +1131,8 @@ function barCaller(filteredData)
     return {
               'Price': d["Price1"],
               'Zip Code': d["Zip Code"],
-              'Inspection Score': d["Inspection Score"]
+              'Inspection Score': d["Inspection Score"],
+              'Business Id':d["Business Id"]
             }
   });
   bar_data_sorted = convertRow(bar_data);
@@ -1029,7 +1145,8 @@ function spaceCaller(filteredData)
     return {
               'City': d["City"],
               'Zip Code': d["Zip Code"],
-              'Title': d["Title"]
+              'Title': d["Title"],
+              'Business Id':d["Business Id"]
             }
   });
   dataprocess(spacing_data);
