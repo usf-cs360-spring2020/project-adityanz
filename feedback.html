@@ -32,53 +32,109 @@
     <div class="container">
       <!-- Begin page content -->
       <div class="content">
-        <h2> Group Feedback Sessions</h2>
+        <h2>Peer Feedback Sessions Criterion</h2>
 
                       <table class="table is-hoverable is-striped">
                       <thead>
                           <tr>
-                            <th>Feedback</th>
-                            <th>Changes</th>
+                            <th>Criteria</th>
+                            <th>Description</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr>
-                            <td> the caption might be better outside the chart| I didn't like the position of caption. Also there was no interactivity section although he talked about his planned interactivity.</td>
-                            <td> Changed the location of the caption to the bottom and added the interactivity section</td>
+                            <td>Visual Encodings</td>
+                            <td>How are visual channels used to encode data? Visual channels include: position, length or size, shape, color, and other visual attributes. (This is a comment only criteria; the rating scheme is not meaningful for this criteria.)/td>
                           </tr>
 
                           <tr>
-                            <td>Color blind prone</td>
-                            <td>Changed the colors to make them more relaateable and moderate.</td>
+                            <td>Non-Color Encoding</td>
+                            <td>Rate and comment on the non-color encodings on a scale of 5 (highly appropriate) to 1 (inappropriate). Consider both the data type and strength of the visual channel (or preattentive attribute) used to encode that data.</td>
                           </tr>
 
                           <tr>
-                            <td>Neighborhoods, therefore slight LF.</td>
-                            <td>Treid to make it more readable at the bottom</td>
+                            <td>Color Encodings</td>
+                            <td>Rate and comment on the color encodings on a scale of 5 (excellent use of color) to 1 (inappropriate use of color). Consider whether the type color scheme (diverging, sequential, categorical) is appropriate. For categorical color schemes, also consider the number of distinct colors used and whether the colors are separable. Select N/A if color is not used to encode the data.</td>
                           </tr>
 
                           <tr>
-                            <td>Looks good but there is a lot of text on the right side, also rotating it so the text isnt sideways could help.</td>
-                            <td>Changed the orientation of the graph to vertical to horizontal</td>
+                            <td>Context</td>
+                            <td>Rate and comment on the provided context for interpreting the visualization on a scale of 5 (excellent context provided) to 1 (insufficient context provided). Consider how visual elements such as axis and tick labels, legends, annotations, descriptive text, grid lines, and other non-data visual elements help with providing context and interpretation of the visualization.</td>
                           </tr>
 
                           <tr>
-                            <td>Seems good! Good use of the stacked bar visualization type. What more components or interaction could you add to enable discovery and exploring?</td>
-                            <td>Will add more interactivity and added a special calculation</td>
+                            <td>Lie Factor</td>
+                            <td>Rate and comment on the lie factor on a scale of 5 (no lie factor) to 1 (high lie factor). Consider whether the visualization has misleading context (e.g. misleading but properly labeled scales), weak visual encodings (e.g. choosing volume instead of area), exaggerated encodings (e.g. scaling circles by radius instead of area), or unnecessary use of 3D and depth.</td>
                           </tr>
 
                           <tr>
-                            <td>You may want to add some further interactivity or a supplementary chart to add complexity to this and strengthen the relation to the overall theme. There may some lie factor issues depending on the population of each neighborhood, which would impact the number of alarms, so you may want to do ratios rather than just number of alarms.</td>
-                            <td>I could find the ratios however, the visualization is a good enough ratio rather than the calculations</td>
+                            <td>Data Ink Ratio</td>
+                            <td>Rate and comment on the data ink ratio on a scale of 5 (high data ink ratio) to 1 (low data ink ratio). Consider both whether more data ink should be added or non-data ink should be removed.</td>
                           </tr>
 
                           <tr>
-                            <td>I appreciate your ambition to include the range, but you will almost certainly need to cut down the amount of data you are looking at. The entire data set is too large to perform on-demand filtering on the client-side. Other than that, I really like it.</td>
-                            <td>I cut down the amount of data to only focus on ten years</td>
+                            <td>Data Density</td>
+                            <td>Rate and comment on the data density on a scale of 5 (high data density) to 1 (low data density). Consider both the amount of data included as well as the overall size of the visualization(s).</td>
+                          </tr>
+                          <tr>
+                            <td>Gestalt Principles</td>
+                            <td>Rate and comment on the Gestalt principles on a scale of 5 (used well) to 1 (used poorly). Consider the principles of background versus foreground, proximity, and similarity.</td>
+                          </tr>
+                          <tr>
+                            <td>Planned Interactivity</td>
+                            <td>What interaction mechanisms will be used? Consider details-on-demand, highlighting, brushing, filtering, linked views, focus plus context, zooming, panning or translating, rotating, and others. (This is a comment only criteria; the rating scheme is not meaningful for this criteria.)</td>
+                          </tr>
+                          <tr>
+                            <td>Planned Interaction Effectiveness</td>
+                            <td>Rate and comment on the planned interactivity on a scale of 5 (highly effective) to 1 (ineffective). Consider whether the interactivity improves exploration, search, or engagement. Select N/A if interactivity will not be implemented.</td>
+                          </tr>
+                          <tr>
+                            <td>Design and Aesthetics</td>
+                            <td>Rate and comment on the design and aesthetics on a scale of 5 (aesthetically pleasing or beautiful) to 1 (not aesthetically pleasing).</td>
+                          </tr>
+                          <tr>
+                            <td>Understanding</td>
+                            <td>List 1 to 3 things about the data that you learned or understood by this visualization, or new questions you have about the data as a result of the visualization. (This is a comment only criteria; the rating scheme is not meaningful for this criteria.)</td>
                           </tr>
 
+                          <tr>
+                            <td>Visualizaion Goal</td>
+                            <td>What is the overall goal of this visualization? Consider both what audiences should learn from the visualization, and how well it fits into the overall narrative of the project. (This is a comment only criteria; the rating scheme is not meaningful for this criteria.)</td>
+                          </tr>
+
+                          <tr>
+                            <td>Visualizaion Effectiveness</td>
+                            <td>Rate and comment on the visualization effectiveness on a scale of 5 (highly effective) to 1 (ineffective). Consider given the visualization goal and your understanding of the data from the prototype visualization.</td>
+                          </tr>
+
+
+                                                    <tr>
+                                                      <td>Visualization Goal</td>
+                                                      <td>I cut down the amount of data to only focus on ten years</td>
+                                                    </tr>
+
+
+                                                                              <tr>
+                                                                                <td>Visualizaion Effectiveness</td>
+                                                                                <td>I cut down the amount of data to only focus on ten years</td>
+                                                                              </tr>
                         </tbody>
                       </table>
+                      <h2>Peer Feedback One</h2>
+                      <div id="example1"></div>
+                      <script src="/js/pdfobject.js"></script>
+                      <script>PDFObject.embed("/Feedback1.pdf", "#example1");</script>
+
+                      <h2>Peer Feedback Two</h2>
+                      <div id="example1"></div>
+                      <script src="/js/pdfobject.js"></script>
+                      <script>PDFObject.embed("/Feedback2.pdf", "#example1");</script>
+
+                      <h2>Instructor Feedback Sessions</h2>
+                      <p> I ended up getting a lot of useful feedbaack from the instructor, in regards to trying to make my stacked bar and my map more linked and interactive. The Professor
+                        ended up telling me to try and play around with the categorical and the measurements and try and see if I could create links. I ended up not stepping the colors and making them more discrete. I also ended up
+                        using the price categories on my stacked bar and making it more interactive. I also added the % of the total bar that it represented.
+
       </div>
     </div>
   </section>
