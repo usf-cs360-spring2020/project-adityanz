@@ -13,7 +13,6 @@ svg#vis {
 #tooltip {
   font-weight: 600;
   text-shadow: 0px 0px 2px white;
-
   fill: black;
   stroke: black;
 }
@@ -669,7 +668,6 @@ return !path.includes(item);})
   });
 
 
-
   // remove tooltip text on mouseout
   selection.on('mouseout.tooltip', function(d) {
     g.select("#tooltip").remove();
@@ -728,6 +726,56 @@ function showTooltip(g, node) {
   if (tbox.y < gbox.y) {
     tooltip.attr('dy', dy + tbox.height);
   }
+}
+
+function maptooltip()
+{
+
+  var symbols = g.arrests.selectAll("circle")
+
+  symbols.on("mouseover", function(d) {
+    d3.select(this).raise();
+    d3.select(this).classed("active", true);
+
+
+      symbols.on("mouseout", function(d) {
+        d3.select(this).classed("active", false);
+        details.style("visibility", "hidden");
+      });
+
+  // use template literal for the detail table
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+  const html = `
+    <table border="0" cellspacing="0" cellpadding="2">
+    <tbody>
+      <tr>
+        <th>Name:</th>
+        <td>${d['Name']}</td>
+      </tr>
+      <tr>
+        <th>Address:</th>
+        <td>${d['Address']}</td>
+      </tr>
+      <tr>
+        <th>Recent Health Inspection Score:</th>
+        <td>${d['Inspection Score']}</td>
+      </tr>
+      <tr>
+        <th>Risk Category:</th>
+        <td>${d['Risk Category Improved']}</td>
+      </tr>
+      <tr>
+        <th>Yelp Rating:</th>
+        <td>${d['Rating']}</td>
+      </tr>
+    </tbody>
+    </table>
+  `;
+
+  body.html(html);
+  details.style("visibility", "visible");
+  });
+
 }
 
 function toCartesian(r, theta) {
@@ -945,48 +993,7 @@ function drawMap(json)
       symbols.filter(d => d['Rating'] >= 4 &&  d['Rating'] < 5).style("fill","6a0dad")
       symbols.filter(d => d['Rating'] == 5).style("fill","6a0dad");
 
-  symbols.on("mouseover", function(d) {
-    d3.select(this).raise();
-    d3.select(this).classed("active", true);
-
-
-      symbols.on("mouseout", function(d) {
-        d3.select(this).classed("active", false);
-        details.style("visibility", "hidden");
-      });
-
-  // use template literal for the detail table
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
-  const html = `
-    <table border="0" cellspacing="0" cellpadding="2">
-    <tbody>
-      <tr>
-        <th>Name:</th>
-        <td>${d['Name']}</td>
-      </tr>
-      <tr>
-        <th>Address:</th>
-        <td>${d['Address']}</td>
-      </tr>
-      <tr>
-        <th>Recent Health Inspection Score:</th>
-        <td>${d['Inspection Score']}</td>
-      </tr>
-      <tr>
-        <th>Risk Category:</th>
-        <td>${d['Risk Category Improved']}</td>
-      </tr>
-      <tr>
-        <th>Yelp Rating:</th>
-        <td>${d['Rating']}</td>
-      </tr>
-    </tbody>
-    </table>
-  `;
-
-  body.html(html);
-  details.style("visibility", "visible");
-});
+      maptooltip(json)
 
   var zoom = d3.zoom()
   .scaleExtent([1, 8])
