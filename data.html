@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Data</title>
+    <title>Feedback</title>
 
     <!-- Load Bulma from CDN (consider saving it to repository instead) -->
     <!-- https://bulma.io/ -->
@@ -35,7 +35,7 @@
 
         <h2 id="data">Data Source</h2>
 
-        <h2 id="data">Data</h2>
+        <h2 id="data">Data SF</h2>
 
                         <p>The data set was taken from Data SF and shows the <a href="https://data.sfgov.org/Health-and-Social-Services/Restaurant-Scores-LIVES-Standard/pyih-qa8i"> Health Scores for Restaurants </a> in the city and county of San Francisco.
                         <p>It collects data of the latest health score of the restaurant</p>
@@ -159,6 +159,7 @@
                             <td>Plain Text</td>
                           </tr>
                           <tr>
+                            <tr class="is-selected">
                             <td>violation_description</td>
                             <td>The health department type of violation and its details as defined in their health code.</td>
                             <td>Plain Text</td>
@@ -170,10 +171,6 @@
                             <td>The level of risk of the health violation.</td>
                             <td>Plain Text</td>
                           </tr>
-                          </tr>
-
-
-
 
                         </tbody>
                       </table>
@@ -187,13 +184,223 @@
             <li>Mobile</li>
           </ol> -->
           <br></br>
-          <p>The second data set was taken from Kaggle and shows the <a href="http://kaggle.com/yelp-dataset/yelp-dataset"> Yelp Dataset </a> and it will focus on the city and county of San Francisco, even though the Data has information from all of the USA.
+
+          <h2 id="data">Yelp API</h2>
+          <p>The second data set was taken from calls directly with the Yelp API <a href="https://www.yelp.com/developers/documentation/v3/business_search"> Yelp Fusion API </a> and it will focus on the city and county of San Francisco, even though the Data has information from all of the USA.
+            <p> I ended up using business_name, business_address and business_city in order to get my results from the API. It took multiple attemps and tries and the Yelp API had a 5000 limit per day so it ended up taking a few days. <p>
+          <div style="height:400px; width: 1200px; overflow:auto;">
+            <table class="table is-hoverable is-bordered grades">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>total</td>
+                    <td>int</td>
+                    <td>Total number of business Yelp finds based on the search criteria. Sometimes, the value may exceed 1000. In such case, you still can only get up to 1000 businesses using multiple queries and combinations of the "limit" and "offset" parameters.</td>
+                </tr>
+                <tr>
+                    <td>businesses</td>
+                    <td>object[]</td>
+                    <td>List of business Yelp finds based on the search criteria.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].categories</td>
+                    <td>object[]</td>
+                    <td>List of category title and alias pairs associated with this business.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].categories[x].alias</td>
+                    <td>string</td>
+                    <td>Alias of a category, when searching for business in certain categories, use alias rather than the title.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].categories[x].title</td>
+                    <td>string</td>
+                    <td>Title of a category for display purpose.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].coordinates</td>
+                    <td>object</td>
+                    <td>Coordinates of this business.</td>
+                </tr>
+                <tr>
+                  <tr class="is-selected">
+                    <td>businesses[x].coordinates.latitude</td>
+                    <td>decimal</td>
+                    <td>Latitude of this business.</td>
+                </tr>
+                <tr>
+                  <tr class="is-selected">
+                    <td>businesses[x].coordinates.longitude</td>
+                    <td>decimal</td>
+                    <td>Longitude of this business.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].display_phone</td>
+                    <td>string</td>
+                    <td>Phone number of the business formatted nicely to be displayed to users. The format is the standard phone number format for the business's country.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].distance</td>
+                    <td>decimal</td>
+                    <td>Distance in meters from the search location. This returns meters regardless of the locale.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].id</td>
+                    <td>string</td>
+                    <td>Unique Yelp ID of this business. Example: '4kMBvIEWPxWkWKFN__8SxQ'</td>
+                </tr>
+                <tr>
+                  <tr class="is-selected">
+                    <td>businesses[x].alias</td>
+                    <td>string</td>
+                    <td>Unique Yelp alias of this business. Can contain unicode characters. Example: 'yelp-san-francisco'. Also see <a href="/developers/faq#difference-between-id-and-alias">What's the difference between the Yelp business ID and business alias?</a></td>
+                </tr>
+                <tr>
+                    <td>businesses[x].image_url</td>
+                    <td>string</td>
+                    <td>URL of photo for this business.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].is_closed</td>
+                    <td>bool</td>
+                    <td>Whether business has been (permanently) closed</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].location</td>
+                    <td>object</td>
+                    <td>Location of this business, including address, city, state, zip code and country.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].location.address1</td>
+                    <td>string</td>
+                    <td>Street address of this business.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].location.address2</td>
+                    <td>string</td>
+                    <td>Street address of this business, continued.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].location.address3</td>
+                    <td>string</td>
+                    <td>Street address of this business, continued.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].location.city</td>
+                    <td>string</td>
+                    <td>City of this business.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].location.country</td>
+                    <td>string</td>
+                    <td><a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> country code of this business.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].location.display_address</td>
+                    <td>string[]</td>
+                    <td>Array of strings that if organized vertically give an address that is in the standard address format for the business's country.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].location.state</td>
+                    <td>string</td>
+                    <td><a href="https://en.wikipedia.org/wiki/ISO_3166-2">ISO 3166-2</a> (with a few <a href="/developers/documentation/v3/state_codes">exceptions</a>) state code of this business.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].location.zip_code</td>
+                    <td>string</td>
+                    <td><a href="https://en.wikipedia.org/wiki/Postal_code">Zip code</a> of this business.</td>
+                </tr>
+                <tr>
+                  <tr class="is-selected">
+                    <td>businesses[x].name</td>
+                    <td>string</td>
+                    <td>Name of this business.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].phone</td>
+                    <td>string</td>
+                    <td>Phone number of the business.</td>
+                </tr>
+                <tr>
+                  <tr class="is-selected">
+                    <td>businesses[x].price</td>
+                    <td>string</td>
+                    <td>Price level of the business. Value is one of $, $$, $$$ and $$$$.</td>
+                </tr>
+                <tr>
+                  <tr class="is-selected">
+                    <td>businesses[x].rating</td>
+                    <td>decimal</td>
+                    <td>Rating for this business (value ranges from 1, 1.5, ... 4.5, 5).</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].review_count</td>
+                    <td>int</td>
+                    <td>Number of reviews for this business.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].url</td>
+                    <td>string</td>
+                    <td>URL for business page on Yelp.</td>
+                </tr>
+                <tr>
+                    <td>businesses[x].transactions</td>
+                    <td>string[]</td>
+                    <td>List of Yelp transactions that the business is registered for. Current supported values are <b>pickup</b>, <b>delivery</b> and <b>restaurant_reservation</b>.</td>
+                </tr>
+                <tr>
+                    <td>region</td>
+                    <td>dict</td>
+                    <td>Suggested area in a map to display results in.</td>
+                </tr>
+                <tr>
+                    <td>region.center</td>
+                    <td>dict</td>
+                    <td>Center position of map area.</td>
+                </tr>
+                <tr>
+                    <td>region.center.latitude</td>
+                    <td>decimal</td>
+                    <td>Latitude position of map bounds center.</td>
+                </tr>
+                <tr>
+                    <td>region.center.longitude</td>
+                    <td>decimal</td>
+                    <td>Longitude position of map bounds center.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+          <p>The second data set was taken directly from the Yelp API. I ended up parsing my CSV into python, in order to grab the information of the yelp API, by sending in the resturant and then the  <p>
           <p>It collects data of the latest health score of the restaurant</p>
           <p> I also want to use the yelp dataset in order to get the average review score from yelp and see if that had an effect on the health score and the way the people perceived the restaurants </p>
 
+          <h3 id="wrangling">Processing of the data</h3>
+          <p>In order to process the data, I ended up making a python program to get every single YELP restaurant by reading in the CSV of the SF Health Data</p>
+          <script src="https://gist.github.com/adityanz/9f4189a8817f523e9e1403a6999369d2.js"></script>
+
+          <h3 id="wrangling">Merging of the datasets</h3>
+          <p> After getting every single JSON value from the Yelp API, I remove all the unecessary JSON files that returned blank files, then I merged all the JSON files, into one big JSON file and opened in in Tableu Prep and Tableu Desktop and converted the JSON into a CSV</p>
+          <p> In Tableu Prep, I ended up doing a inner join based on the lower business name from the SF and the yelp data. I had to get rid of the leading zeroes so I had to use Regex</p>
+          <p> SPLIT(  REGEXP_REPLACE(lower([business_address]),"^([0])","") , ",",1) and lower([Display Address])</p>
+          <p> I did another inner join based on the lower business name from the SF health and yelp data. </p>
+          <p> Replace(trim(lower([business_name])),'"','') and trim(lower([Name]))</p>
 
           <h3 id="wrangling">Filtering</h3>
           <p> Currently, I have filtered out any null values of the health score. </p>
+          <p> I removed any data point that was not located in San Francisco. </p>
+          <p> I also kept the latest health inspection dates and scores. </p>
+          <p> I have a filter that removed all the null and non SF Zip Code, the Price categories that were null, and the risk categories that were null, and the business categories that were null</p>
+
+          <p>The size of the dataset after processing for my visualizatons was about 4500 rows based on the merging, filtering that I did above.</p>
 
         <!-- <p> It was important to see the relevance and the importance of the data. </p>
         <p> Filter the dataset to show cases that were OPENED in the month of February 2020 only. Then choose a CATEGORY that has at least 100 cases associated with it. For example, this includes "Street and Sidewalk Cleaning" (approximately 21k cases) and "Residential Building Request" (approximately 100 cases).</p>

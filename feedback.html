@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Feedback</title>
+
+    <!-- Load Bulma from CDN (consider saving it to repository instead) -->
+    <!-- https://bulma.io/ -->
+    <link rel="stylesheet" href="https://jenil.github.io/bulmaswatch/lux/bulmaswatch.min.css">
+
+    <!-- Load Font Awesome 5 (free) icons -->
+
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  </head>
+
+  <body>
+
+  <div id="navigation">
+  </div>
+  <script>
+  $(function(){
+    $("#navigation").load("navbar.html");
+  });
+  </script>
+
+  <section class="section">
+    <div class="container">
+      <!-- Begin page content -->
+      <div class="content">
+        <h2> Group Feedback Sessions</h2>
+
+                      <table class="table is-hoverable is-striped">
+                      <thead>
+                          <tr>
+                            <th>Feedback</th>
+                            <th>Changes</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td> the caption might be better outside the chart| I didn't like the position of caption. Also there was no interactivity section although he talked about his planned interactivity.</td>
+                            <td> Changed the location of the caption to the bottom and added the interactivity section</td>
+                          </tr>
+
+                          <tr>
+                            <td>Color blind prone</td>
+                            <td>Changed the colors to make them more relaateable and moderate.</td>
+                          </tr>
+
+                          <tr>
+                            <td>Neighborhoods, therefore slight LF.</td>
+                            <td>Treid to make it more readable at the bottom</td>
+                          </tr>
+
+                          <tr>
+                            <td>Looks good but there is a lot of text on the right side, also rotating it so the text isnt sideways could help.</td>
+                            <td>Changed the orientation of the graph to vertical to horizontal</td>
+                          </tr>
+
+                          <tr>
+                            <td>Seems good! Good use of the stacked bar visualization type. What more components or interaction could you add to enable discovery and exploring?</td>
+                            <td>Will add more interactivity and added a special calculation</td>
+                          </tr>
+
+                          <tr>
+                            <td>You may want to add some further interactivity or a supplementary chart to add complexity to this and strengthen the relation to the overall theme. There may some lie factor issues depending on the population of each neighborhood, which would impact the number of alarms, so you may want to do ratios rather than just number of alarms.</td>
+                            <td>I could find the ratios however, the visualization is a good enough ratio rather than the calculations</td>
+                          </tr>
+
+                          <tr>
+                            <td>I appreciate your ambition to include the range, but you will almost certainly need to cut down the amount of data you are looking at. The entire data set is too large to perform on-demand filtering on the client-side. Other than that, I really like it.</td>
+                            <td>I cut down the amount of data to only focus on ten years</td>
+                          </tr>
+
+                        </tbody>
+                      </table>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer">
+  </div>
+  <script>
+  $(function(){
+    $("#footer").load("footer.html");
+  });
+  </script>
+
+  <!-- End mobile menu responsiveness -->
+  </body>
+
+</html>
