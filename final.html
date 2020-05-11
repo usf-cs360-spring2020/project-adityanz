@@ -1,103 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<style type="text/css">
-svg#vis {
-  background-color: lightblue;
-  text-align: center;
-  font-family: sans-serif;
-  font-size: 9pt;
-  fill: black;
-}
-
-#tooltip {
-  font-weight: 600;
-  text-shadow: 0px 0px 2px white;
-  fill: black;
-  stroke: black;
-}
-
-#dropdown {
-    margin-bottom: 20px;
-    margin-right: 35px;
-}
-
-path.land {
-  fill: #dddddd;
-  stroke: none;
-}
-
-path.neighborhood {
-  fill: none;
-  stroke: white;
-  stroke-width: 3.5px;
-  pointer-events: none;
-}
-
-path.street {
-  fill: none;
-  stroke: white;
-  stroke-width: 1px;
-  pointer-events: none;
-}
-
-.active {
-  stroke: red !important;
-  stroke-width: 1.5px !important;
-}
-
-path.muni {
-  fill: none;
-  stroke: white;
-  stroke-width: 1px;
-  pointer-events: none;
-}
-
-circle.symbol {
-  fill-opacity: 0.6;
-
-  stroke: white;
-  stroke-width: 1px;
-}
-
-a:link, a:visited {
-  color: #444444;
-}
-
-a:hover, a:active {
-  color: red;
-}
-
-th {
-  text-align: right;
-}
-
-
-.axis line {
-  fill: none;
-  stroke: #000000;
-}
-
-div.tooltip-donut {
-    position: absolute;
-    text-align: center;
-    padding: .1rem;
-    background: #FFFFFF;
-    color: #313639;
-    border: 1px solid #313639;
-    border-radius: 8px;
-    pointer-events: none;
-    font-size: 0.6rem;
-}
-
-.aditya {
-  background-color: white;
-  border: 1px solid white;
-}
-
-.icon:before {
-    font-family: "Font Awesome 5 Free";
-}
+<link href="style.css" rel="stylesheet" type="text/css">
 
 </style>
 
@@ -110,7 +13,7 @@ div.tooltip-donut {
 
     <!-- Load Bulma from CDN (consider saving it to repository instead) -->
     <!-- https://bulma.io/ -->
-    <link rel="stylesheet" href="https://jenil.github.io/bulmaswatch/darkly/bulmaswatch.min.css">
+    <link rel="stylesheet" href="https://jenil.github.io/bulmaswatch/lux/bulmaswatch.min.css">
 
     <!-- Load Font Awesome 5 (free) icons -->
 
@@ -132,9 +35,9 @@ div.tooltip-donut {
     $("#navigation").load("navbar.html");
   });
   </script>
-
-
       <section class="section is-centered">
+        <div class="container">
+          <div class="content has-text-centered">
         <select id="dropdown"></select>
           <div>
 
@@ -161,6 +64,8 @@ div.tooltip-donut {
 
           <svg width="960" height="600" class="aditya" id="bar"></svg>
 
+        </div>
+      </div>
 
           </div>
             </section>
@@ -472,12 +377,12 @@ if(exist.length){
     svg3.append("g")
      .attr("class", "axis")
      .attr("transform", "translate(80,0)")
-     .style("stroke","lightslategray")
+     // .style("stroke","white")
      .call(d3.axisLeft(yScale));
 svg3.append("g")
   .attr("class", "axis")
   .attr("transform", "translate(80,440)")
-  .style("stroke","lightslategray")
+  // .style("stroke","white")
   .call(d3.axisBottom(xScale));
 
 svg3.selectAll(".bar")
@@ -538,6 +443,7 @@ svg3.append('text')
     .attr('y',-5)
     .attr('text-anchor', 'middle')
     .style("font-size", "10px")
+    // .style("stroke","white")
     .text('Zip Code');
 
 svg3.append('text')
@@ -547,6 +453,7 @@ svg3.append('text')
   .attr('dy', '1.75ex')
   .attr('text-anchor', 'middle')
   .style("font-size", "12px")
+  // .style("stroke","white")
   .text('Average Inspection Score');
 
   svg3.append('text')
@@ -569,7 +476,7 @@ function dataprocess(dataset)
   .key(function(d) {return d["City"]; })
   .key(function(d) {return d["Zip Code"]; })
   .key(function(d) {return d["Title"]; })
-  .key(function(d) {return d["Business Id"]; })
+  // .key(function(d) {return d["Business Id"]; })
   // .values(function(d) {return d["Business Id"]; })
   .rollup(function(leaves) { return leaves.length; })
   .entries(dataset);
@@ -879,11 +786,11 @@ let graph;
 
 function drawBasemap(json) {
   graph = g;
-  console.log("basemap", json);
-  console.log("GG!")
-console.log(g);
-console.log(urls);
-console.log(json);
+//   console.log("basemap", json);
+//   console.log("GG!")
+// console.log(g);
+// console.log(urls);
+// console.log(json);
 
    basemap = g.basemap.selectAll("path.land")
     .data(json.features)
@@ -939,7 +846,7 @@ function drawStreets(json) {
   });
 
 
-  console.log("removed", json.features.length - streets.length, "inactive streets");
+  // console.log("removed", json.features.length - streets.length, "inactive streets");
 
   g.streets.selectAll("path.street")
     .data(streets)

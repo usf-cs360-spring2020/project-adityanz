@@ -1,44 +1,18 @@
-/* body {
-  background-color: white;
+<style type="text/css">
+svg#vis {
+  background-color: lightblue;
   text-align: center;
-
   font-family: sans-serif;
   font-size: 9pt;
-} */
-
-svg {
-  // border: 1px dotted whitesmoke;
-}
-.node {
-  stroke: silver;
-  stroke-width: 1px;
-}
-
-.link {
-  fill: none;
-  stroke: silver;
-  stroke-width: 1px;
-}
-
-.selected {
-  stroke: red !important;
-}
-
-text#tooltip {
-  font-family: sans-serif;
-  font-size: 12px;
-  text-shadow: 1px 1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, -1px -1px 0 #fff;
-  font-weight: 900;
-}
-
-
-#tooltip {
-  font-weight: 600;
-  text-shadow: 0px 0px 2px black;
-
   fill: black;
-  stroke: none;
 }
+
+/* #tooltip {
+  font-weight: 600;
+  text-shadow: 0px 0px 2px white;
+  fill: black;
+  stroke: black;
+} */
 
 #dropdown {
     margin-bottom: 20px;
@@ -95,13 +69,13 @@ th {
   text-align: right;
 }
 
-
+/*
 .axis line {
   fill: none;
   stroke: #000000;
-}
+} */
 
-div.tooltip-donut {
+.tooltip-donut {
     position: absolute;
     text-align: center;
     padding: .1rem;
@@ -113,10 +87,7 @@ div.tooltip-donut {
     font-size: 0.6rem;
 }
 
-.aditya {
-  background-color: white;
-  border: 1px solid white;
-}
+
 
 .icon:before {
     font-family: "Font Awesome 5 Free";
