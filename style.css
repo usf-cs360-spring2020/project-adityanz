@@ -7,12 +7,12 @@ svg#vis {
   fill: black;
 }
 
-/* #tooltip {
+#tooltip {
   font-weight: 600;
   text-shadow: 0px 0px 2px white;
   fill: black;
   stroke: black;
-} */
+}
 
 #dropdown {
     margin-bottom: 20px;
