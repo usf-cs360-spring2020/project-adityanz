@@ -118,6 +118,7 @@ div.tooltip-donut {
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
 
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 
@@ -150,7 +151,17 @@ div.tooltip-donut {
             <g id="details" pointer-events="none"></g>
           </svg>
 
+          <div class="row align-items-center">
+             <div class="col-sm-2"><p id="value-range"></p></div>
+             <div class="col-sm"><div id="slider-range"></div></div>
+           </div>
+
+           <div></div>
+
           <svg class="aditya" id="bar"></svg>
+
+          <div></div>
+          <svg width="960" height="600" id="vis2"> </svg>
 
           </div>
             </section>
@@ -198,8 +209,22 @@ div.tooltip-donut {
                       .range(["#D73F47", "#ABA09C", "#ED7A22", "#65A9A3"]);
 
 
+            let svg3;
 
-            let svg;
+            let svg2;
+
+            let numberFormat = d3.format(".2~s");
+
+            let pad = 14;
+
+            let color;
+
+            let diameter = Math.min(width, height);
+
+            let zoom = d3.zoom()
+              let generator = d3.linkVertical()
+                .x(d => d.x)
+                .y(d => d.y);
 
             // load data
             // d3.csv(bar, convertRow).then(drawMain);
@@ -222,16 +247,16 @@ const start = d3.timeDay.floor(d3.timeDay.offset(end, -7));
 const format = d3.timeFormat("%Y-%m-%dT%H:%M:%S");
 console.log(format(start), format(end));
 
-svg = d3.select("body").select("svg#vis");
+svg2 = d3.select("body").select("svg#vis");
 
 const g = {
-  basemap: svg.select("g#basemap"),
-  streets: svg.select("g#streets"),
-  outline: svg.select("g#outline"),
-  muni: svg.select("g#muni"),
-  arrests: svg.select("g#arrests"),
-  tooltip: svg.select("g#tooltip"),
-  details: svg.select("g#details")
+  basemap: svg2.select("g#basemap"),
+  streets: svg2.select("g#streets"),
+  outline: svg2.select("g#outline"),
+  muni: svg2.select("g#muni"),
+  arrests: svg2.select("g#arrests"),
+  tooltip: svg2.select("g#tooltip"),
+  details: svg2.select("g#details")
 };
 
 // setup tooltip (shows neighborhood name)
@@ -278,56 +303,8 @@ d3.json(urls.basemap).then(function(json) {
 
   d3.json(urls.streets).then(drawStreets)
   // d3.json(urls.muni).then(drawMuni)
-  d3.csv(csv_data).then(drawArrests);
+  d3.csv(csv_data).then(controller);
 });
-//
-// function convertRow(row, index) {
-//   // this will be our converted output row
-//   let out = {};
-//   //out.values = [];
-//   out.total;
-//   // this will be the values from each yyyy-mm column
-//   for (let col in row) {
-//     switch (col) {      // these are the text columns that do not need conversion
-//       // these are the columns that need to be converted to integers
-//       case 'Avg. Inspection Score':
-//           // out[col] = parseInt(row[col]);
-//           break;
-//       // these should be our time series values
-//
-//       // case 'Call Type Group':
-//       //   break;
-//       //
-//       // case 'Price':
-//       // // out[col] = row[col];
-//       // // var type = row[col];
-//       // //   out[type] = value;
-//       // // console.log(out[type])
-//       //   break;
-//
-//       case 'Zip Code':
-//         out[col] = row[col];
-//         break;
-//
-//       default:
-//       var type = row[col];
-//       // console.log(type);
-//       var value = parseInt(row['Avg. Inspection Score'])
-//       // console.log(value);
-//       // var type = value;
-//       out[type] = value;
-//       out.total = value;
-//       // var value = parseInt(row["Avg. Inspection Score"])
-//       // var time  = parseFloat(row["Price"]).toFixed(2);
-//       //  out[type] = value;
-//       //  // out[type+" zip code"] = zip code;
-//       //  out.total = value;
-//        break;
-//     }
-//   }
-//   console.log(out);
-//   return out;
-// }
 
 function convertRow(data) {
   console.log(data);
@@ -369,10 +346,10 @@ function convertRow(data) {
         default:
         var type = data[i]["Price"];
         var value = parseInt(data[i]["Inspection Score"])
-        console.log("type");
-        console.log(type);
-        console.log("value");
-        console.log(value);
+        // console.log("type");
+        // console.log(type);
+        // console.log("value");
+        // console.log(value);
         // var type = value;
         out[type] = value;
         out.total = value;
@@ -387,14 +364,14 @@ function convertRow(data) {
       // console.log(newdata);
     }
   }
-  console.log(newdata);
+  // console.log(newdata);
   return newdata;
 }
 
 function drawMain(data) {
 
-  console.log("data")
-  console.log(data)
+  // console.log("data")
+  // console.log(data)
   var newdata = []
   var output = []
 
@@ -428,9 +405,9 @@ if(exist.length){
   output.sort(function(a, b) { return b.total - a.total; });
 
   for (j = 0; j< output.length; j++){
-
-    console.log("og item")
-    console.log(output[j])
+    //
+    // console.log("og item")
+    // console.log(output[j])
     const temp = new Object();
       for (i=0; i<keys.length; i++)
       {
@@ -453,22 +430,22 @@ if(exist.length){
         // console.log(temp);
       }
       newdata[j] = temp;
-      console.log("new item")
-      console.log(newdata[j])
+      // console.log("new item")
+      // console.log(newdata[j])
 };
 
-  console.log("keys")
-  console.log(keys)
+  // console.log("keys")
+  // console.log(keys)
+  //
+  //
+  // console.log("output")
+  // console.log(output)
+  //
+  // console.log("newdata")
+  // console.log(newdata)
 
-
-  console.log("output")
-  console.log(output)
-
-  console.log("newdata")
-  console.log(newdata)
-
-  console.log("d3")
-  console.log(d3.stack().keys(keys)(newdata))
+  // console.log("d3")
+  // console.log(d3.stack().keys(keys)(newdata))
   // console.log(data)
   // console.log(output)
 
@@ -488,23 +465,23 @@ if(exist.length){
    .attr("class", "tooltip-donut")
    .style("opacity", 0);
 
-  svg = d3.select("svg#bar")
+  svg3 = d3.select("svg#bar")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    svg.append("g")
+    svg3.append("g")
      .attr("class", "axis")
      .attr("transform", "translate(80,0)")
      .style("stroke","lightslategray")
      .call(d3.axisLeft(yScale));
-svg.append("g")
+svg3.append("g")
   .attr("class", "axis")
   .attr("transform", "translate(80,440)")
   .style("stroke","lightslategray")
   .call(d3.axisBottom(xScale));
 
-svg.selectAll(".bar")
+svg3.selectAll(".bar")
 .data(d3.stack().keys(keys_color)(newdata))
 .enter().append("g")
   .attr("fill", function(d) {return zScale(d.key) })
@@ -527,19 +504,6 @@ svg.selectAll(".bar")
 
       let format = d3.format(",")
       let key = Object.keys(d.data).find(key => d.data[key] === d[1]-d[0]);
-      let alarmcount = d[1]-d[0];
-      let time = 0;
-      for (var i = 0; i< data.length;i++)
-      {
-        if (data[i][key] == alarmcount)
-        {
-          time = data[i][key+" time"];
-        }
-      }
-
-      // console.log(key)
-      // console.log(d[1]-d[0])
-      // console.log(Object.values(data))
       div.html(" Price Category: " + key + "<br>" + "Zip Code: "+d.data["Zip Code"] + "<br>" +"Total Avg. Inspection Score: "+ format(d[1]-d[0])  + "<br>")
           .style("left", (d3.event.pageX - 30) + "px")
           .style("top", (d3.event.pageY - 15) + "px")
@@ -556,232 +520,230 @@ svg.selectAll(".bar")
 .duration(2000)//time in ms
 .attr("height", function(d){
     return yScale.bandwidth()
-})
+})}
 
-            // function drawStackedBar(data) {
-            //
-            //   console.log(data)
-            //   var newdata = []
-            //   var output = []
-            //
-            //
-            //   var keys = ['$','$$','$$$','$$$$']
-            //  var i;
-            //   var j;
-            //   // console.log(data)
-            //
-            //
-            //   // console.log(data['$']);
-            //
-            //   data.forEach(function(item){
-            //     var exist = output.filter(function(v,i){
-            //     return v["Zip Code"] == item["Zip Code"];
-            //     });
-            //   if(exist.length){
-            //   var index = output.indexOf(exist[0]);
-            //   console.log(index);
-            //   var total = output[index].total + item.total;
-            //   console.log(total);
-            //   Object.assign(output[index], item);
-            //   output[index].total = total;
-            //   } else{
-            //   if(typeof item.value == 'string'){
-            //     item.value = [item.value];
-            //   }
-            //   console.log(item);
-            //   output.push(item);
-            //   }
-            //   });
-            //   output.sort(function(a, b) { return b.total - a.total; });
-            //   console.log(output);
-            //   //
-            //   // console.log("out")
-            //   console.log(output)
-            //
-            //   for (j = 0; j< output.length; j++){
-            //
-            //     console.log("og item")
-            //     console.log(output[j])
-            //     const temp = new Object();
-            //       for (i=0; i<keys.length; i++)
-            //       {
-            //         temp["Zip Code"] = output[j]["Zip Code"];
-            //         // console.log(item["$$$"])
-            //         // console.log(item[keys[i]])
-            //         // console.log(output[j]["Price"] == keys[i]);
-            //         if (output[j]["Price"] == keys[i])
-            //         {
-            //           // console.log(keys[i])
-            //           // console.log(output[j])
-            //           // console.log(output[j]["Price"])
-            //           // console.log(output[j]["Inspection Score"])
-            //           var dollarsign = output[j]["Price"];
-            //           var score = parseInt(output[j]["Inspection Score"]);
-            //           temp[dollarsign] = score;
-            //
-            //           // temp[j][dollarsign]= 0;
-            //           // temp[j][dollarsign]= score;
-            //           // temp[j] = {};
-            //           // temp[j][keys[i] = data[j][keys[i]];
-            //         }
-            //         else{
-            //           var dollarsign = keys[i];
-            //           var score = 0;
-            //           temp[dollarsign] = score;
-            //           // temp[j][dollarsign]=score;
-            //         }
-            //         console.log(temp);
-            //       }
-            //       newdata[j] = temp;
-            //       console.log("new item")
-            //       console.log(newdata[j])
-            // };
-            //
-            //   console.log("keys")
-            //   console.log(keys)
-            //
-            //
-            //   console.log("output")
-            //   console.log(output)
-            //
-            //   console.log("newdata")
-            //   console.log(newdata)
-            //
-            //   // console.log(data)
-            //   // console.log(output)
-            //
-            //   var keys_color = ['$','$$','$$$','$$$$']
-            //
-            //   xScale.domain([0,350])
-            //
-            //
-            //   yScale.domain(output.map(function(d) {  return d["Zip Code"]; }));
-            //
-            //   zScale.domain(keys_color)
-            //   // console.log(output);
-            //
-            //   d3.selectAll("svg#bar > *").remove();
-            //
-            //   var div = d3.select("body").append("div")
-            //    .attr("class", "tooltip-donut")
-            //    .style("opacity", 0);
-            //
-            //   svg = d3.select("svg#bar")
-            //     .attr("width", width + margin.left + margin.right)
-            //     .attr("height", height + margin.top + margin.bottom)
-            //     .append("g")
-            //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-            //     svg.append("g")
-            //      .attr("class", "axis")
-            //      .attr("transform", "translate(80,0)")
-            //      .style("stroke","lightslategray")
-            //      .call(d3.axisLeft(yScale));
-            // svg.append("g")
-            //   .attr("class", "axis")
-            //   .attr("transform", "translate(80,440)")
-            //   .style("stroke","lightslategray")
-            //   .call(d3.axisBottom(xScale));
-            //
-            // svg.selectAll(".bar")
-            // .data(d3.stack().keys(keys_color)(newdata))
-            // .enter().append("g")
-            //   .attr("fill", function(d) {return zScale(d.key) })
-            // .selectAll("rect").data(function (d){ return d; })
-            // .enter().append("rect")
-            // .attr("transform", "translate(80,0)")
-            // .attr("y", function(d) { return yScale(d.data["Zip Code"]) })
-            // .attr("x", function(d) { return xScale(d[0]) })
-            // .attr("width", function(d) {
-            //   return xScale(d[1]) - xScale(d[0]); })
-            //
-            // .on("mouseover", function(d) {
-            //         d3.select(this).transition()
-            //                .duration('50')
-            //                .attr('opacity', .50);
-            //
-            //         div.transition()
-            //                .duration(50)
-            //                .style("opacity", 1)
-            //
-            //       let format = d3.format(",")
-            //       let key = Object.keys(d.data).find(key => d.data[key]);
-            //       console.log("YO")
-            //       console.log(Object.keys(d.data))
-            //       // let alarmcount = d[1]-d[0];
-            //       // let time = 0;
-            //       // for (var i = 0; i< data.length;i++)
-            //       // {
-            //       //   if (data[i][key] == alarmcount)
-            //       //   {
-            //       //     time = data[i][key+" time"];
-            //       //   }
-            //       // }
-            //
-            //       // console.log(key)
-            //       // console.log(d[1]-d[0])
-            //       // console.log(Object.values(data))
-            //       div.html("Price Category: " + key+ "<br>" + "Zip Code: "+d.data["Zip Code"] + "<br>" +"Total Avg. Inspection Score: "+ format(d[1]-d[0])  + "<br>")
-            //           .style("left", (d3.event.pageX - 30) + "px")
-            //           .style("top", (d3.event.pageY - 15) + "px")
-            //
-            // 		})
-            //   .on("mouseout", function(d) {d3.select(this).transition()
-            //                .duration('50')
-            //                .attr('opacity', 1)
-            //         div.transition()
-            //                .duration('50')
-            //                .style("opacity", 0)
-            //     }) 
-            // .transition()
-            // .duration(2000)//time in ms
-            // .attr("height", function(d){
-            //     return yScale.bandwidth()
-            // })
+function dataprocess(dataset)
+{
+  var nesting= d3.nest()
+  .key(function(d) {return d["City"]; })
+  .key(function(d) {return d["Zip Code"]; })
+  .key(function(d) {return d["Title"]; })
 
-            // svg.select("#legend")
-            // svg.append("circle").attr("cx",870).attr("cy",30).attr("r", 6).style("fill", "#65A9A3")
-            // svg.append("circle").attr("cx",870).attr("cy",50).attr("r", 6).style("fill", "#ED7A22")
-            // svg.append("circle").attr("cx",870).attr("cy",70).attr("r", 6).style("fill", "#ABA09C")
-            // svg.append("circle").attr("cx",870).attr("cy",100).attr("r", 6).style("fill", "#D73F47")
-            // svg.append("text").attr("x", 863).attr("y", 10).text("Call Type Group").style("font-size", "12px").attr("alignment-baseline","middle")
-            // svg.append("text").attr("x", 880).attr("y", 30).text("Alarm").style("font-size", "10px").attr("alignment-baseline","middle")
-            // svg.append("text").attr("x", 880).attr("y", 50).text("Fire").style("font-size", "10px").attr("alignment-baseline","middle")
-            // svg.append("text").attr("x", 880).attr("y", 70).text("Non").style("font-size", "10px").attr("alignment-baseline","middle")
-            // svg.append("text").attr("x", 880).attr("y", 80).text("Life Threatening").style("font-size", "10px").attr("alignment-baseline","middle")
-            // svg.append("text").attr("x", 880).attr("y", 100).text("Potentially").style("font-size", "10px").attr("alignment-baseline","middle");
-            // svg.append("text").attr("x", 880).attr("y", 110).text("Life Threatening").style("font-size", "10px").attr("alignment-baseline","middle")
-            //
-            // svg.append('text')
-            //     .attr('class', 'axis-title')
-            //     .attr('x', 37)
-            //     .attr('y',-5)
-            //     .attr('text-anchor', 'middle')
-            //     .style("font-size", "10px")
-            //     .text('Zip Code');
-            //
-            // svg.append('text')
-            //   .attr('class', 'axis-title')
-            //   .attr('x', 470)
-            //   .attr('y', 442)
-            //   .attr('dy', '1.75ex')
-            //   .attr('text-anchor', 'middle')
-            //   .style("font-size", "12px")
-            //   .text('Avg. Inspection Score');
-            //
-            //   svg.append('text')
-            //     .attr('class', 'title')
-            //     .attr('x', 442)
-            //     .attr('y',-25)
-            //     .attr('dy', '1.75ex')
-            //     .attr('text-anchor', 'middle')
-            //     .attr("font-weight", 600)
-            //     .style("font-size", "16")
-            //     .text('Bar Graph of the Avg. Inspection Score based on the areas in the last 10 years');
+  .rollup(function(leaves) { return leaves.length; })
+  .entries(dataset);
 
-            }
+  var root = d3.hierarchy(nesting[0], function(d){
+    return d.values
+  });
+
+  color = d3.scaleSequential([root.height, 0], d3.interpolateViridis)
+
+  // root.count()
+  //
+  // root.each(function(node) {
+  //   // copy this calculation since value is sometimes overwritten
+  //   node.data.leaves = node.value;
+  // })
+  root.sort(function(a, b) {
+    return b.height - a.height || b.count - a.count;
+  });
+
+  root.sum(row => row.value)
+
+  // root.each(function(node) {
+  //   // copy this calculation since value is sometimes overwritten
+  //   node.data.total = node.value;
+  // })
+  //
+  //
+
+  //let layout = d3.treemap().padding(5).size([width - 2 * pad, height - 2 * pad]);
+  let layout = d3.pack()
+    .padding(5)
+    .size([diameter - 2 * pad, diameter - 2 * pad]);
 
 
 
+  layout(root);
+
+      let svg = d3.select("body").select("svg#vis2")
+            .style("width", diameter)
+            .style("height", diameter);
+
+
+  let plot = svg.append("g")
+    .attr("id", "plot")
+    .attr("transform", translate(pad, pad));
+
+  drawNodes(plot.append("g"), root.descendants(), false);
+
+
+}
+
+
+function translate(x, y) {
+    return 'translate(' + String(x) + ',' + String(y) + ')';
+}
+
+
+function findModule() {
+  if (root.data.name === module) {
+    return root.copy();
+  }
+
+  for (let i = 0; i < root.children.length; i++) {
+    if (root.children[i].data.name === module) {
+      return root.children[i].copy();
+    }
+  }
+
+  return null;
+}
+
+function drawLinks(g, links, generator) {
+  let paths = g.selectAll('path')
+    .data(links)
+    .enter()
+    .append('path')
+    .attr('d', generator)
+    .attr('class', 'link');
+}
+function drawNodes(g, nodes, raise) {
+  let circles = g.selectAll('circle')
+    .data(nodes, node => node.data.key)
+    .enter()
+    .append('circle')
+      .attr('r', d => d.r ? d.r : 5)
+      //.attr('r',5)
+      .attr('cx', d => d.x)
+      .attr('cy', d => d.y)
+      .attr('id', d => d.data.key)
+      .attr('class', 'node')
+      .style('fill', d => color(d.depth));
+
+  setupEvents(g, circles, raise);
+}
+
+function setupEvents(g, selection, raise) {
+
+  selection.on('mouseover.highlight', function(d) {
+    // https://github.com/d3/d3-hierarchy#node_path
+    // returns path from d3.select(this) node to selection.data()[0] root node
+    let path = d3.select(this).datum().path(selection.data()[0]);
+    console.log(path);
+
+    // select all of the nodes on the shortest path
+    let update = selection.data(path, node =>  node.x && node.y && node.r); 
+
+    // highlight the selected nodes
+    update.classed('selected', true);
+
+    if (raise) {
+      update.raise();
+    }
+    update.call(d3.zoom().on("zoom", function () {
+       g.attr("transform", d3.event.transform)
+    }))
+
+    selection.filter(function(item) {
+return !path.includes(item);})
+    .transition()
+    .duration(500)
+    .attr("fill-opacity", "0.1")
+    .style("stroke", "")
+    });
+
+  selection.on('mouseout.highlight', function(d) {
+    let path = d3.select(this).datum().path(selection.data()[0]);
+    let update = selection.data(path, node =>  node.x && node.y && node.r); 
+    update.classed('selected', false);
+
+    selection
+      .transition()
+      .attr("fill-opacity", "1")
+      .style('stroke', 'black');
+
+      // show tooltip text on mouseover (hover)
+      selection.on('mouseover.tooltip', function(d) {
+        showTooltip(g, d3.select(this));
+      });
+  });
+
+
+
+  // remove tooltip text on mouseout
+  selection.on('mouseout.tooltip', function(d) {
+    g.select("#tooltip").remove();
+  });
+}
+
+function showTooltip(g, node) {
+  let gbox = g.node().getBBox();     // get bounding box of group BEFORE adding text
+  let nbox = node.node().getBBox();  // get bounding box of node
+
+  // calculate shift amount
+  let dx = nbox.width / 2;
+  let dy = nbox.height / 2;
+
+  // retrieve node attributes (calculate middle point)
+  let x = nbox.x + dx;
+  let y = nbox.y + dy;
+
+  // get data for node
+  let datum = node.datum();
+
+  // remove "java.base." from the node name
+  let name = datum.data.key;
+
+  // use node name and total size as tooltip text
+  let text = `${name} , ${numberFormat(datum.value)} Restaurants`;
+
+  // create tooltip
+  let tooltip = g.append('text')
+    .text(text)
+    .attr('x', x)
+    .attr('y', y)
+    .attr('dy', -dy - 4) // shift upward above circle
+    .attr('text-anchor', 'middle') // anchor in the middle
+    .attr('id', 'tooltip');
+
+  // it is possible the tooltip will fall off the edge of the
+  // plot area. we can detect when this happens, and set the
+  // text anchor appropriately
+
+  // get bounding box for the text
+  let tbox = tooltip.node().getBBox();
+
+  // if text will fall off left side, anchor at start
+  if (tbox.x < gbox.x) {
+    tooltip.attr('text-anchor', 'start');
+    tooltip.attr('dx', -dx); // nudge text over from center
+  }
+  // if text will fall off right side, anchor at end
+  else if ((tbox.x + tbox.width) > (gbox.x + gbox.width)) {
+    tooltip.attr('text-anchor', 'end');
+    tooltip.attr('dx', dx);
+  }
+
+  // if text will fall off top side, place below circle instead
+  if (tbox.y < gbox.y) {
+    tooltip.attr('dy', dy + tbox.height);
+  }
+}
+
+function toCartesian(r, theta) {
+  return {
+    x: r * Math.cos(theta),
+    y: r * Math.sin(theta)
+  };
+}
+
+function toPolar(x, y) {
+  return {
+    r: Math.sqrt(x * x + y * y),
+    theta: Math.atan2(y, x)
+  };
+}
 
 function drawBasemap(json) {
   console.log("basemap", json);
@@ -845,27 +807,46 @@ function drawStreets(json) {
     .append("path")
     .attr("d", path)
     .attr("class", "street");
+
+    svg2.select("#legend")
+    svg2.append("circle").attr("cx",870).attr("cy",30).attr("r", 6).style("fill", "#000000")
+    svg2.append("circle").attr("cx",870).attr("cy",50).attr("r", 6).style("fill", "#FF0000")
+    svg2.append("circle").attr("cx",870).attr("cy",70).attr("r", 6).style("fill", "#0000ff")
+    svg2.append("circle").attr("cx",870).attr("cy",90).attr("r", 6).style("fill", "#FF7F00")
+    svg2.append("circle").attr("cx",870).attr("cy",110).attr("r", 6).style("fill", "#6a0dad")
+    svg2.append("text").attr("x", 800).attr("y", 10).text("Yelp Rating").style("font-size", "12px").attr("alignment-baseline","middle")
+    svg2.append("text").attr("x", 880).attr("y", 30).text("Between 1 and 2").style("font-size", "10px").attr("alignment-baseline","middle")
+    svg2.append("text").attr("x", 880).attr("y", 50).text("Between 2 and 3").style("font-size", "10px").attr("alignment-baseline","middle")
+    svg2.append("text").attr("x", 880).attr("y", 70).text("Between 3 and 4").style("font-size", "10px").attr("alignment-baseline","middle")
+    svg2.append("text").attr("x", 880).attr("y", 90).text("Between 4 and 5").style("font-size", "10px").attr("alignment-baseline","middle")
+    svg2.append("text").attr("x", 880).attr("y", 110).text("5 stars!").style("font-size", "10px").attr("alignment-baseline","middle")
+
+
+    svg2.append('text')
+    .attr('class', 'title')
+    .attr('x', 500)
+    .attr('y',0)
+    .attr('dy', '1.75ex')
+    .attr('text-anchor', 'middle')
+    .attr("font-weight", 600)
+    .style("font-size", "16")
+    // .text('MUNI 311 Calls for Feburary 2020 in SF');
+
 }
 
 let remover = '0';
-function drawArrests(json) {
-  console.log("arrests", json);
 
+function controller(json) {
   // loop through and add projected (x, y) coordinates
   // (just makes our d3 code a bit more simple later)
-  json.forEach(function(d) {
-    const latitude = parseFloat(d.Latitude);
-    const longitude = parseFloat(d.Longitude);
-    const pixels = projection([longitude, latitude]);
 
-    d.x = pixels[0];
-    d.y = pixels[1];
-  });
-  console.log("og");
-
-  //
-
-
+  var starting = 1;
+  if (starting == 1)
+  {
+    console.log("first")
+    drawVis(json)
+    starting++;
+  }
       var dropdown_options = [
         { value: "0",
           text: "All" },
@@ -877,11 +858,6 @@ function drawArrests(json) {
           text: "High Risk" },
             { value: "No Risk",
             text: "No Risk" }]
-            //   { value: "5",
-            //   text: "Health Score: 78-74" },
-            //     { value: "6",
-            //     text: "Health Score: 74 or lower" },
-            //       { value: "7"}]
         d3.select("#dropdown")
           .selectAll("option")
           .data(dropdown_options)
@@ -892,196 +868,166 @@ function drawArrests(json) {
 
     var dropDown = d3.select("#dropdown");
     dropDown.on("change", function() {
-        // newly selected dataset includes downtown
         d3.select("#downtown")
           .property("checked", true);
-
         checked = true;
-
         selected_dataset = d3.event.target.value;
         remover = selected_dataset.toString();
-        console.log(selected_dataset)
-        console.log("in add")
-          symbols.remove()
-          drawArrests(json)
-          symbols.filter(d=> d["Risk Category Improved"])
-          console.log(remover)
-          symbols.filter(d => d["Risk Category Improved"] != remover).remove();
-          console.log("in remove")
+        dropdown_filter(json,remover);
     });
+  // dataFilter(json);
+}
 
-    var symbols = g.arrests.selectAll("circle")
-        .data(json)
-        .enter()
-        .append("circle")
-        .attr("cx", d => d.x)
-        .attr("cy", d => d.y)
-        .attr("r", 5)
-        .attr("class", "symbol")
-        .style("fill","000000")
-      // symbols.filter(d => d['Risk Category Improved'] !== selected_dataset)
-          symbols.filter(d => d['Rating'] >= 1 &&  d['Rating'] < 2).style("fill","FF0000")
-          symbols.filter(d => d['Rating'] >= 2 &&  d['Rating'] < 3).style("fill","0000ff")
-          symbols.filter(d => d['Rating'] >= 3 &&  d['Rating'] < 4).style("fill","FF7F00");
-          symbols.filter(d => d['Rating'] >= 4 &&  d['Rating'] < 5).style("fill","6a0dad");
-          symbols.filter(d => d['Rating'] == 5).style("fill","6a0dad");
 
-          console.log(remover)
-          if (remover != '0')
+function drawVis(newData)
+{
+  drawMap(newData);
+  barCaller(newData);
+  spaceCaller(newData);
+}
+
+// function slider_filter(json, val) {
+//   // update position and text of label according to slider scale
+//
+//   // filter data set and redraw plot
+//   var filteredData = json.filter(function(d) {
+//     return (d["Inspection Score"] <= val[1] &&  d["Inspection Score"] >= val[0]);
+//   })
+//   drawMap(filteredData);
+// }
+
+
+function dropdown_filter(json, value)
+{
+    var filteredData = json.filter(function(d)
+    {
+          if (d["Risk Category Improved"] == remover)
           {
-            console.log(remover)
-            symbols.filter(d => d["Risk Category Improved"] != remover).remove();
+            return d["Risk Category Improved"];
+          }
+          else if (remover == 0) {
+            return d["Risk Category Improved"];
           }
 
-    symbols.on("mouseover", function(d) {
-      d3.select(this).raise();
-      d3.select(this).classed("active", true);
+      });
+    drawVis(filteredData);
+}
 
+function drawMap(json)
+{
+  console.log("UPDATE THE MAP!")
+  console.log("draw me!");
+  console.log(json);
+  json.forEach(function(d) {
+    const latitude = parseFloat(d.Latitude);
+    const longitude = parseFloat(d.Longitude);
+    const pixels = projection([longitude, latitude]);
 
-        symbols.on("mouseout", function(d) {
-          d3.select(this).classed("active", false);
-          details.style("visibility", "hidden");
-        });
-
-
-    // use template literal for the detail table
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
-    const html = `
-      <table border="0" cellspacing="0" cellpadding="2">
-      <tbody>
-        <tr>
-          <th>Name:</th>
-          <td>${d['Name']}</td>
-        </tr>
-        <tr>
-          <th>Address:</th>
-          <td>${d['Address']}</td>
-        </tr>
-        <tr>
-          <th>Recent Health Inspection Score:</th>
-          <td>${d['Inspection Score']}</td>
-        </tr>
-        <tr>
-          <th>Risk Category:</th>
-          <td>${d['Risk Category Improved']}</td>
-        </tr>
-        <tr>
-          <th>Yelp Rating:</th>
-          <td>${d['Rating']}</td>
-        </tr>
-      </tbody>
-      </table>
-    `;
-
-    body.html(html);
-    details.style("visibility", "visible");
+    d.x = pixels[0];
+    d.y = pixels[1];
   });
+
+  g.arrests.selectAll("circle").remove();
+
+  var symbols = g.arrests.selectAll("circle")
+  .data(json)
+      .enter()
+      .append("circle")
+      .attr("cx", d => d.x)
+      .attr("cy", d => d.y)
+      .attr("r", 5)
+      .attr("class", "symbol")
+      .style("fill","000000")
+
+
+      symbols.filter(d => d['Rating'] >= 1 &&  d['Rating'] < 2).style("fill","FF0000")
+      symbols.filter(d => d['Rating'] >= 2 &&  d['Rating'] < 3).style("fill","0000ff")
+      symbols.filter(d => d['Rating'] >= 3 &&  d['Rating'] < 4).style("fill","FF7F00")
+      symbols.filter(d => d['Rating'] >= 4 &&  d['Rating'] < 5).style("fill","6a0dad")
+      symbols.filter(d => d['Rating'] == 5).style("fill","6a0dad");
+
+  symbols.on("mouseover", function(d) {
+    d3.select(this).raise();
+    d3.select(this).classed("active", true);
+
+
+      symbols.on("mouseout", function(d) {
+        d3.select(this).classed("active", false);
+        details.style("visibility", "hidden");
+      });
+
+  // use template literal for the detail table
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+  const html = `
+    <table border="0" cellspacing="0" cellpadding="2">
+    <tbody>
+      <tr>
+        <th>Name:</th>
+        <td>${d['Name']}</td>
+      </tr>
+      <tr>
+        <th>Address:</th>
+        <td>${d['Address']}</td>
+      </tr>
+      <tr>
+        <th>Recent Health Inspection Score:</th>
+        <td>${d['Inspection Score']}</td>
+      </tr>
+      <tr>
+        <th>Risk Category:</th>
+        <td>${d['Risk Category Improved']}</td>
+      </tr>
+      <tr>
+        <th>Yelp Rating:</th>
+        <td>${d['Rating']}</td>
+      </tr>
+    </tbody>
+    </table>
+  `;
+
+  body.html(html);
+  details.style("visibility", "visible");
+});
 
   var zoom = d3.zoom()
   .scaleExtent([1, 8])
         .on('zoom', function() {
-            svg.selectAll('path')
+            svg2.selectAll('path')
              .attr('transform', d3.event.transform)
-            svg.select("g#arrests").selectAll("circle")
+            svg2.select("g#arrests").selectAll("circle")
             // console.log("this ffer",d3.event.transform)
             .attr('transform', d3.event.transform)
             .attr("r", 3/d3.event.transform.k);
   });
 
+  svg2.call(zoom);
+}
 
 
-  svg.select("#legend")
-  svg.append("circle").attr("cx",870).attr("cy",30).attr("r", 6).style("fill", "#000000")
-  svg.append("circle").attr("cx",870).attr("cy",50).attr("r", 6).style("fill", "#FF0000")
-  svg.append("circle").attr("cx",870).attr("cy",70).attr("r", 6).style("fill", "#0000ff")
-  svg.append("circle").attr("cx",870).attr("cy",90).attr("r", 6).style("fill", "#FF7F00")
-  svg.append("circle").attr("cx",870).attr("cy",110).attr("r", 6).style("fill", "#6a0dad")
-  svg.append("text").attr("x", 800).attr("y", 10).text("Yelp Rating").style("font-size", "12px").attr("alignment-baseline","middle")
-  svg.append("text").attr("x", 880).attr("y", 30).text("Between 1 and 2").style("font-size", "10px").attr("alignment-baseline","middle")
-  svg.append("text").attr("x", 880).attr("y", 50).text("Between 2 and 3").style("font-size", "10px").attr("alignment-baseline","middle")
-  svg.append("text").attr("x", 880).attr("y", 70).text("Between 3 and 4").style("font-size", "10px").attr("alignment-baseline","middle")
-  svg.append("text").attr("x", 880).attr("y", 90).text("Between 4 and 5").style("font-size", "10px").attr("alignment-baseline","middle")
-  svg.append("text").attr("x", 880).attr("y", 110).text("5 stars!").style("font-size", "10px").attr("alignment-baseline","middle")
+function barCaller(filteredData)
+{
+  var bar_data = filteredData.map(function(d) {
+    return {
+              'Price': d["Price1"],
+              'Zip Code': d["Zip Code"],
+              'Inspection Score': d["Inspection Score"]
+            }
+  });
+  bar_data_sorted = convertRow(bar_data);
+  drawMain(bar_data_sorted);
+}
 
-
-  svg.append('text')
-  .attr('class', 'title')
-  .attr('x', 500)
-  .attr('y',0)
-  .attr('dy', '1.75ex')
-  .attr('text-anchor', 'middle')
-  .attr("font-weight", 600)
-  .style("font-size", "16")
-  // .text('MUNI 311 Calls for Feburary 2020 in SF');
-
-  svg.call(zoom);
-
-  var filteredData = json.filter(function(d)
-  {
-        if (d["Risk Category Improved"] == remover)
-        {
-          return d["Risk Category Improved"];
-        }
-        else if (remover == 0) {
-          return d["Risk Category Improved"];
-        }
-
-    });
-
-    // console.log(filteredData);
-
-var bar_data = filteredData.map(function(d) {
-  return {
-            'Price': d["Price1"],
-            'Zip Code': d["Zip Code"],
-            'Inspection Score': d["Inspection Score"]
-          }
-});
-console.log(bar_data);
-bar_data_sorted = convertRow(bar_data);
-drawMain(bar_data_sorted);
-
-
-// csv_data = convertToCsv(bar_data);
-// console.log(csv_data);
-// console.log(bar_data);
-// let out = {};
-// var k =0;
-// // out.total;
-//
-// for (k =0; k< bar_data.length; k++)
-// {
-//   let price = bar_data[k]["Price"];
-//   var value = parseInt(bar_data[k]["Inspection Score"])
-//   console.log(price)
-//   console.log(value)
-//   var single = {};
-//   single[price] = value
-//   single["Zip Code"] = bar_data[k]["Zip Code"]
-//   single["Total"] = value;
-//   // out.total = value;
-//
-//   console.log(single);
-//   out[k] = single;
-// }
-// console.log(out);
-// d3.csv(bar_data, convertRow).then(drawMain);
-// drawStackedBar(bar_data);
-
-// function convertToCsv(data) {
-//   console.log(data);
-//     var csvArray = ['Price','Zip Code','Inspection Score'];
-//     data.forEach(function(d) {
-//         csvArray.push(d["Price"] + ',' + d["Zip Code"] + ',' +d["Inspection Score"]);
-//     });
-//     console.log(csvArray)
-//     return csvArray.join("\n");
-// }
-
-// d3.csv(csv_data, convertRow).then(drawMain);
-
-
-        // console.log(bar_data);
+function spaceCaller(filteredData)
+{
+  var spacing_data = filteredData.map(function(d) {
+    return {
+              'City': d["City"],
+              'Zip Code': d["Zip Code"],
+              'Title': d["Title"]
+            }
+  });
+  dataprocess(spacing_data);
+}
 
             function translate(x, y) {
               return 'translate(' + x + ',' + y + ')';
@@ -1091,7 +1037,6 @@ drawMain(bar_data_sorted);
                 return range[0] + (range[1] - range[0]) / 2.0;
               }
 
-}
             </script>
 
 
