@@ -36,8 +36,7 @@
   });
   </script>
       <section class="section is-centered">
-        <div class="container">
-          <div class="content has-text-centered">
+        <div class="container is-centered">
         <select id="dropdown"></select>
           <div>
 
@@ -63,33 +62,24 @@
            <div></div>
 
           <svg width="960" height="600" class="aditya" id="bar"></svg>
+          <div class="content has-text-centered">
 
           <h3>Encoding</h3>
-          My color and size encoding, for now, is very simple, in which I am using the reviews and size.
+          In order to do my data encoding, I ended up
           <p2>
 
         </p2>
               <h3>Interactivity</h3>
 
               <p2>
-
-                For the interactivity in this visualization, I will end up trying to add a drop-down filter based on the type of health complaint that was provided. I will also create zooming into the specific restaurant and also try to pull up certain keywords from the yelp reviews in the tooltip.
-                I also want to be able to create some sort of slider filter, to focus on specific dots in the city based on cuisine or another food category. The biggest challenge is to merge the health data with the restaurant data which is still in progress. I also plan on putting a dropdown based on the area and neighborhood.
-
+                For the interactivity, I ended up placing a tooltip with the brushing on the node link, where it only showcases the point with the same type of cuisine based on the area. I also ended up doing a tooltip with the highlight on the map that gives the details about every single restaurant. For the stacked bar, I ended up showing the health score based on that zipcode with that specific cost, looking at the area and also how expensive that meal was.
             </p2>
 
-            <h3>Fiding</h3>
-            My color and size encoding, for now, is very simple, in which I am using the reviews and size.
-            <p2>
-
           </p2>
-                <h3>Interactivity</h3>
+                <h3>Findings</h3>
 
                 <p2>
-
-                  For the interactivity in this visualization, I will end up trying to add a drop-down filter based on the type of health complaint that was provided. I will also create zooming into the specific restaurant and also try to pull up certain keywords from the yelp reviews in the tooltip.
-                  I also want to be able to create some sort of slider filter, to focus on specific dots in the city based on cuisine or another food category. The biggest challenge is to merge the health data with the restaurant data which is still in progress. I also plan on putting a dropdown based on the area and neighborhood.
-
+                  There is a lot of findings that can be looked at here based on the data and there are a lot of trends.
               </p2>
 
 
@@ -542,6 +532,7 @@ function dataprocess(dataset)
 
 
   layout(root);
+  d3.selectAll("svg#vis2 > *").remove();
 
       let svg = d3.select("body").select("svg#vis2")
             .style("width", diameter)
@@ -693,6 +684,10 @@ return !path.includes(item);})
       <tr>
         <th>Risk Category:</th>
         <td>${d['Risk Category Improved']}</td>
+      </tr>
+      <tr>
+        <th>Violation Description:</th>
+        <td>${d['Violation Description Improved']}</td>
       </tr>
       <tr>
         <th>Yelp Rating:</th>
@@ -885,17 +880,17 @@ function drawStreets(json) {
     .attr("class", "street");
 
     svg2.select("#legend")
-    svg2.append("circle").attr("cx",870).attr("cy",30).attr("r", 6).style("fill", "#FF0000")
-    svg2.append("circle").attr("cx",870).attr("cy",50).attr("r", 6).style("fill", "#0000ff")
-    svg2.append("circle").attr("cx",870).attr("cy",70).attr("r", 6).style("fill", "#FF7F00")
-    svg2.append("circle").attr("cx",870).attr("cy",90).attr("r", 6).style("fill", "#6a0dad")
-    svg2.append("circle").attr("cx",870).attr("cy",110).attr("r", 6).style("fill", "#FFFF00")
-    svg2.append("text").attr("x", 870).attr("y", 10).text("Yelp Rating").style("font-size", "12px").attr("alignment-baseline","middle")
-    svg2.append("text").attr("x", 880).attr("y", 30).text("Between 1 and 2").style("font-size", "10px").attr("alignment-baseline","middle")
-    svg2.append("text").attr("x", 880).attr("y", 50).text("Between 2 and 3").style("font-size", "10px").attr("alignment-baseline","middle")
-    svg2.append("text").attr("x", 880).attr("y", 70).text("Between 3 and 4").style("font-size", "10px").attr("alignment-baseline","middle")
-    svg2.append("text").attr("x", 880).attr("y", 90).text("Between 4 and 5").style("font-size", "10px").attr("alignment-baseline","middle")
-    svg2.append("text").attr("x", 880).attr("y", 110).text("5 stars!").style("font-size", "10px").attr("alignment-baseline","middle")
+    svg2.append("circle").attr("cx",830).attr("cy",30).attr("r", 6).style("fill", "#FF0000")
+    svg2.append("circle").attr("cx",830).attr("cy",50).attr("r", 6).style("fill", "#0000ff")
+    svg2.append("circle").attr("cx",830).attr("cy",70).attr("r", 6).style("fill", "#FF7F00")
+    svg2.append("circle").attr("cx",830).attr("cy",90).attr("r", 6).style("fill", "#6a0dad")
+    svg2.append("circle").attr("cx",830).attr("cy",110).attr("r", 6).style("fill", "#FFFF00")
+    svg2.append("text").attr("x", 830).attr("y", 10).text("Yelp Rating").style("font-size", "12px").attr("alignment-baseline","middle")
+    svg2.append("text").attr("x", 840).attr("y", 30).text("Between 1 and 2").style("font-size", "10px").attr("alignment-baseline","middle")
+    svg2.append("text").attr("x", 840).attr("y", 50).text("Between 2 and 3").style("font-size", "10px").attr("alignment-baseline","middle")
+    svg2.append("text").attr("x", 840).attr("y", 70).text("Between 3 and 4").style("font-size", "10px").attr("alignment-baseline","middle")
+    svg2.append("text").attr("x", 840).attr("y", 90).text("Between 4 and 5").style("font-size", "10px").attr("alignment-baseline","middle")
+    svg2.append("text").attr("x", 840).attr("y", 110).text("5 stars!").style("font-size", "10px").attr("alignment-baseline","middle")
 
 
     //
@@ -1017,14 +1012,14 @@ function drawMap(json)
   });
 
   g.arrests.selectAll("circle").remove();
-
+  let r = 5;
   symbols = g.arrests.selectAll("circle")
   .data(json)
       .enter()
       .append("circle")
       .attr("cx", d => d.x)
       .attr("cy", d => d.y)
-      .attr("r", 3)
+      .attr("r", r)
       .attr("id", d=> d["Business Id"])
       .attr("zip", d=> d["Zip Code"])
       .attr("class", "symbol")
@@ -1048,7 +1043,7 @@ function drawMap(json)
             svg2.select("g#arrests").selectAll("circle")
             // console.log("this ffer",d3.event.transform)
             .attr('transform', d3.event.transform)
-            .attr("r", 2/d3.event.transform.k);
+            .attr("r",r/d3.event.transform.k);
   });
 
   svg2.call(zoom)
