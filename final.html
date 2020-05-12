@@ -61,25 +61,34 @@
            <svg width="960" height="600" id="vis2"> </svg>
            <div></div>
 
+           <p> Hover and interact with the visualization to see relations and patterns </p>
           <svg width="960" height="600" class="aditya" id="bar"></svg>
           <div class="content has-text-centered">
 
           <h3>Encoding</h3>
-          In order to do my data encoding, I ended up
+          Firstly, I ended up having a top level filter, that allows the data to be grouped based on the health risk category and any changes to the drop down, will make all the visualizations update their data.
+          The main visualization is the map, that represents all the data of the health and yelp scores of all the different restaurants in San Francisco. The data is broken down based on the location of the coordinate and is placed on the map accordingly. Each dot resprents each of the indivudial restaurants that exist in San Francisco.
+          The data that is included in the map tooltip shows the name, yelp rating, health score, risk category and violation.
+
+          For the second visualization, the circle packing graph, this represents a hierarchal data layout with three levels, starting with the parent node as the city, followed by the zip code and finally the category type of resturant, which includes cuisines but also type of business. The tooltip of the circle packing represents the number of restaurants in that specific area, and then in that specific type for that area. It also highlights the same nodes that it can find in other areas of the city, based on the cuisine and the amount.
+
+          Finally, for the stacked bar graph, this represents the price category of the resturant followed by the average health score for that price. I wanted to not only look at the scores with the yelp reviews, but also look at the price and how costly that place is to eat out, based on the zip codes.
           <p2>
 
         </p2>
               <h3>Interactivity</h3>
 
               <p2>
-                For the interactivity, I ended up placing a tooltip with the brushing on the node link, where it only showcases the point with the same type of cuisine based on the area. I also ended up doing a tooltip with the highlight on the map that gives the details about every single restaurant. For the stacked bar, I ended up showing the health score based on that zipcode with that specific cost, looking at the area and also how expensive that meal was.
+                For the interactivity, I ended up firstly making all the visualizations have a interative tooltip with a mouse over and a mouse out, that highlights the specifc node or point in question and provides the information relevant to each visualization. I also ended up providing zoom functionality for the map, since there are a lot of data points, and simillary for the circle packing as well. I also create a grey hover over the bar graph that focuses on the specific bar locally.
+                In the map, the areas of the city highlight based on neighborhood as well with a border, diving the different parts of the city, so that your resturant is easier to find.
+                I also implemented cross interactivity in which the circle packing diagram, can highlight at the same time and so you can see the resturants based on zip code in the highlight, and also, based on the type/cuisine . Note that the cuisine will highlight the ones outside of your zip code as well.
             </p2>
 
           </p2>
                 <h3>Findings</h3>
 
                 <p2>
-                  There is a lot of findings that can be looked at here based on the data and there are a lot of trends.
+                  There is a lot of findings that can be looked at here based on the data and there are a lot of trends due to the size of the data. We can start off with overall trends from the map, in which the average rating of the resturants decreases as the risk category increases, which was certain to be seen. We can also see that a lot of the food trucks tend to have more higher risk and health violations, especially in 53 resturants in 94107. 
               </p2>
 
 
@@ -92,8 +101,8 @@
             <script>
 
             // location of data files
-            // let csv_data = 'small.csv';
-            let csv_data= 'finaldata.csv';
+            let csv_data = 'finaldata.csv';
+            // let csv_data= 'small copy.csv';
 
 
             let config = {
@@ -610,6 +619,7 @@ function setupEvents(g, selection, raise, f, basemap, arrests) {
     let path = d3.select(this).datum().path(selection.data()[0]);
     console.log(path);
 
+    data_finder_inside(d)
     // select all of the nodes on the shortest path
     let update = selection.data(path, node =>  node.x && node.y && node.r); 
 
@@ -634,6 +644,8 @@ return !path.includes(item);})
   selection.on('mouseout.highlight', function(d) {
     let path = d3.select(this).datum().path(selection.data()[0]);
     let update = selection.data(path, node =>  node.x && node.y && node.r); 
+    data_finder_outside(d)
+
     update.classed('selected', false);
 
     selection
@@ -645,9 +657,9 @@ return !path.includes(item);})
       selection.on('mouseover.tooltip', function(d) {
         showTooltip(g, d3.select(this));
       });
-      data_finder_inside(d);
   });
 
+  // data_finder_outside(d);
 
   // remove tooltip text on mouseout
   selection.on('mouseout.tooltip', function(d) {
@@ -657,12 +669,6 @@ return !path.includes(item);})
   symbols.on("mouseover", function(d) {
     d3.select(this).raise();
     d3.select(this).classed("active", true);
-
-
-      symbols.on("mouseout", function(d) {
-        d3.select(this).classed("active", false);
-        details.style("visibility", "hidden");
-      });
 
   // use template literal for the detail table
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
@@ -701,32 +707,105 @@ return !path.includes(item);})
   details.style("visibility", "visible");
   });
 
+
+        symbols.on("mouseout", function(d) {
+          d3.select(this).classed("active", false);
+          details.style("visibility", "hidden");
+        });
+
+
 }
 
 function data_finder_inside(name){
-  console.log("THE NAME")
-  console.log(name);
-  console.log("inside data data_finder_inside")
-  console.log(symbols);
+  // console.log("THE NAME")
+  // console.log(name);
+  // console.log("inside data data_finder_inside")
+  // console.log(symbols);
   // console.log(arrests);
     symbols["_groups"][0].forEach(function(path) {
-      console.log("outside if")
-      console.log(path["__data__"]["Zip Code"])
-      console.log(name.data)
-      console.log("path on")
-      console.log(path["__on"])
-      console.log("path data")
-      console.log(path["__data__"])
+      // console.log("the path")
+      // console.log(path)
+      // console.log("outside if")
+      // console.log("PATH ATTRIBUTES")
+      // console.log(path.attributes)
+      // console.log(path["__data__"]["Zip Code"])
+      // console.log(name.data)
+      // console.log("path on")
+      // console.log(path["__on"])
+      // console.log("path data")
+      // console.log(path["__data__"])
       if (path["__data__"]["Zip Code"] == name.data.key){
-        console.log("inside if")
-        console.log(path["__on"][0])
-        console.log(path["__data__"])
-        console.log(path["__on"][0].value(path["__data__"]))
-          path["__on"][0].value(path["__data__"]);
+        // console.log("inside if 1")
+        // console.log(path["__data__"])
+        // console.log(path["__data__"]["Zip Code"])
+
+        // console.log(path["__on"][0].value)
+        // console.log(path["__on"][1].value(path["__data__"]))
+        // path["__on"][1].value(path["__data__"])
+        path.attributes.class.value = "symbol active";
           // path["__on"][2].value(path["__data__"]);
       }
+      else if (path["__data__"]["Title"] == name.data.key){
+        // console.log(name.parent.key);
+      //   console.log("inside if 2")
+      //   // console.log("inside if 2")
+      //   // console.log(path["__data__"])
+      //   // console.log(path["__data__"]["Zip Code"])
+      //   //
+      //   // console.log(path["__on"][0].value)
+      //   // console.log(path["__on"][0].value(path["__data__"]))
+        path.attributes.class.value = "symbol active";
+      //     // path["__on"][2].value(path["__data__"]);
+      }
+
     });
   }
+
+  function data_finder_outside(name){
+    // console.log("THE NAME")
+    // console.log(name);
+    // console.log("inside data data_finder_inside")
+    // console.log(symbols);
+    // // console.log(arrests);
+      symbols["_groups"][0].forEach(function(path) {
+    //     console.log("the path")
+    //     console.log(path)
+    //     console.log("outside if")
+    //     console.log("PATH ATTRIBUTES")
+    //     console.log(path.attributes)
+    //     console.log(path["__data__"]["Zip Code"])
+    //     console.log(name.data)
+    //     console.log("path on")
+    //     console.log(path["__on"])
+    //     console.log("path data")
+    //     console.log(path["__data__"])
+        if (path["__data__"]["Zip Code"] == name.data.key){
+          // console.log("inside if 1")
+          // console.log(path["__data__"])
+          // console.log(path["__data__"]["Zip Code"])
+          //
+          // console.log(path["__on"][0].value)
+          // console.log(path["__on"][0].value(path["__data__"]))
+          path.attributes.class.value = "symbol";
+          // path["__on"][0].value(path["__data__"])
+
+            // path["__on"][2].value(path["__data__"]);
+        }
+        else if (path["__data__"]["Title"] == name.data.key){
+        //   console.log("inside if 2")
+        //   console.log(path["__data__"])
+        //   console.log(path["__data__"]["Zip Code"])
+        //
+        //   console.log(path["__on"][0].value)
+        //   // console.log(path["__on"][0].value(path["__data__"]))
+        //   // path["__on"][0].value(path["__data__"])
+          path.attributes.class.value = "symbol";
+        //     // path["__on"][2].value(path["__data__"]);
+        }
+
+      });
+    }
+  //   }
 
 function showTooltip(g, node) {
   let gbox = g.node().getBBox();     // get bounding box of group BEFORE adding text
