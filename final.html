@@ -88,7 +88,7 @@
                 <h3>Findings</h3>
 
                 <p2>
-                  There is a lot of findings that can be looked at here based on the data and there are a lot of trends due to the size of the data. We can start off with overall trends from the map, in which the average rating of the resturants decreases as the risk category increases, which was certain to be seen. We can also see that a lot of the food trucks tend to have more higher risk and health violations, especially in 53 resturants in 94107. 
+                  There is a lot of findings that can be looked at here based on the data and there are a lot of trends due to the size of the data. We can start off with overall trends from the map, in which the average rating of the resturants decreases as the risk category increases, which was certain to be seen. We can also see that a lot of the food trucks tend to have more higher risk and health violations, especially in 53 resturants in 94107.
               </p2>
 
 
@@ -102,7 +102,6 @@
 
             // location of data files
             let csv_data = 'finaldata.csv';
-            // let csv_data= 'small copy.csv';
 
 
             let config = {
@@ -617,11 +616,15 @@ function setupEvents(g, selection, raise, f, basemap, arrests) {
     // https://github.com/d3/d3-hierarchy#node_path
     // returns path from d3.select(this) node to selection.data()[0] root node
     let path = d3.select(this).datum().path(selection.data()[0]);
+    let update = selection.data(path, node =>  node.x && node.y && node.r); 
+    console.log("PATH")
     console.log(path);
+
 
     data_finder_inside(d)
     // select all of the nodes on the shortest path
-    let update = selection.data(path, node =>  node.x && node.y && node.r); 
+    console.log("UPDATE")
+    console.log(update);
 
     // highlight the selected nodes
     update.classed('selected', true);
@@ -644,6 +647,7 @@ return !path.includes(item);})
   selection.on('mouseout.highlight', function(d) {
     let path = d3.select(this).datum().path(selection.data()[0]);
     let update = selection.data(path, node =>  node.x && node.y && node.r); 
+    console.log(update);
     data_finder_outside(d)
 
     update.classed('selected', false);
@@ -746,16 +750,19 @@ function data_finder_inside(name){
           // path["__on"][2].value(path["__data__"]);
       }
       else if (path["__data__"]["Title"] == name.data.key){
-        // console.log(name.parent.key);
-      //   console.log("inside if 2")
-      //   // console.log("inside if 2")
-      //   // console.log(path["__data__"])
-      //   // console.log(path["__data__"]["Zip Code"])
-      //   //
-      //   // console.log(path["__on"][0].value)
-      //   // console.log(path["__on"][0].value(path["__data__"]))
-        path.attributes.class.value = "symbol active";
-      //     // path["__on"][2].value(path["__data__"]);
+        if (path["__data__"]["Zip Code"] == name.parent.data.key)
+        {
+          // console.log(name.parent.key);
+        //   console.log("inside if 2")
+        //   // console.log("inside if 2")
+        //   // console.log(path["__data__"])
+        //   // console.log(path["__data__"]["Zip Code"])
+        //   //
+        //   // console.log(path["__on"][0].value)
+        //   // console.log(path["__on"][0].value(path["__data__"]))
+          path.attributes.class.value = "symbol active";
+        //     // path["__on"][2].value(path["__data__"]);
+        }
       }
 
     });
@@ -792,15 +799,19 @@ function data_finder_inside(name){
             // path["__on"][2].value(path["__data__"]);
         }
         else if (path["__data__"]["Title"] == name.data.key){
-        //   console.log("inside if 2")
-        //   console.log(path["__data__"])
-        //   console.log(path["__data__"]["Zip Code"])
-        //
-        //   console.log(path["__on"][0].value)
-        //   // console.log(path["__on"][0].value(path["__data__"]))
-        //   // path["__on"][0].value(path["__data__"])
-          path.attributes.class.value = "symbol";
-        //     // path["__on"][2].value(path["__data__"]);
+          if (path["__data__"]["Zip Code"] == name.parent.data.key)
+          {
+            // console.log(name.parent.key);
+          //   console.log("inside if 2")
+          //   // console.log("inside if 2")
+          //   // console.log(path["__data__"])
+          //   // console.log(path["__data__"]["Zip Code"])
+          //   //
+          //   // console.log(path["__on"][0].value)
+          //   // console.log(path["__on"][0].value(path["__data__"]))
+            path.attributes.class.value = "symbol active";
+          //     // path["__on"][2].value(path["__data__"]);
+          }
         }
 
       });
