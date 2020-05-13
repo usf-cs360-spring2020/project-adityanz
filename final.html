@@ -37,6 +37,13 @@
   </script>
       <section class="section is-centered">
         <div class="container is-centered">
+      <h1>Final Release</h1>
+    </div>
+    </section>
+
+      <section class="section is-centered">
+        <div class="container is-centered">
+          <p> Hover over using the mouse and interact with the visualization. Use the dropdown to filter the data</p>
         <select id="dropdown"></select>
           <div>
 
@@ -61,35 +68,34 @@
            <svg width="960" height="600" id="vis2"> </svg>
            <div></div>
 
-           <p> Hover and interact with the visualization to see relations and patterns </p>
           <svg width="960" height="600" class="aditya" id="bar"></svg>
           <div class="content has-text-centered">
 
-          <h3>Encoding</h3>
-          Firstly, I ended up having a top level filter, that allows the data to be grouped based on the health risk category and any changes to the drop down, will make all the visualizations update their data.
-          The main visualization is the map, that represents all the data of the health and yelp scores of all the different restaurants in San Francisco. The data is broken down based on the location of the coordinate and is placed on the map accordingly. Each dot resprents each of the indivudial restaurants that exist in San Francisco.
-          The data that is included in the map tooltip shows the name, yelp rating, health score, risk category and violation.
+            <h3>Encoding</h3>
+            Firstly, I ended up having a top-level filter, that allows the data to be grouped based on the health risk category, and any changes to the drop-down will make all the visualizations update their data.
+            The main visualization is the map, that represents all the data of the health and yelp scores of all the different restaurants in San Francisco. The data is broken down based on the location of the coordinate and is placed on the map accordingly. Each dot represents each of the individual restaurants that exist in San Francisco.
+            The data that is included in the map tooltip shows the name, yelp rating, health score, risk category, and violation.
 
-          For the second visualization, the circle packing graph, this represents a hierarchal data layout with three levels, starting with the parent node as the city, followed by the zip code and finally the category type of resturant, which includes cuisines but also type of business. The tooltip of the circle packing represents the number of restaurants in that specific area, and then in that specific type for that area. It also highlights the same nodes that it can find in other areas of the city, based on the cuisine and the amount.
+            For the second visualization, the circle packing graph, this represents a hierarchal data layout with three levels, starting with the parent node as the city, followed by the zip code and finally the category type of restaurant, which includes cuisines but also a type of business. The tooltip of the circle packing represents the number of restaurants in that specific area, and then in that specific type for that area. It also highlights the same nodes that it can find in other areas of the city, based on the cuisine and the amount.
 
-          Finally, for the stacked bar graph, this represents the price category of the resturant followed by the average health score for that price. I wanted to not only look at the scores with the yelp reviews, but also look at the price and how costly that place is to eat out, based on the zip codes.
-          <p2>
-
-        </p2>
-              <h3>Interactivity</h3>
-
-              <p2>
-                For the interactivity, I ended up firstly making all the visualizations have a interative tooltip with a mouse over and a mouse out, that highlights the specifc node or point in question and provides the information relevant to each visualization. I also ended up providing zoom functionality for the map, since there are a lot of data points, and simillary for the circle packing as well. I also create a grey hover over the bar graph that focuses on the specific bar locally.
-                In the map, the areas of the city highlight based on neighborhood as well with a border, diving the different parts of the city, so that your resturant is easier to find.
-                I also implemented cross interactivity in which the circle packing diagram, can highlight at the same time and so you can see the resturants based on zip code in the highlight, and also, based on the type/cuisine . Note that the cuisine will highlight the ones outside of your zip code as well.
-            </p2>
+            Finally, for the stacked bar graph, this represents the price category of the restaurant followed by the average health score for that price. I wanted to not only look at the scores with the yelp reviews but also look at the price and how costly that place is to eat out, based on the zip codes.
+            <p2>
 
           </p2>
-                <h3>Findings</h3>
+                <h3>Interactivity</h3>
 
                 <p2>
-                  There is a lot of findings that can be looked at here based on the data and there are a lot of trends due to the size of the data. We can start off with overall trends from the map, in which the average rating of the resturants decreases as the risk category increases, which was certain to be seen. We can also see that a lot of the food trucks tend to have more higher risk and health violations, especially in 53 resturants in 94107.
+                  For the interactivity, I ended up firstly making all the visualizations have an interactive tooltip with mouseover and a mouse out, that highlights the specific node or point in question and provides the information relevant to each visualization. I also ended up providing zoom functionality for the map, since there are a lot of data points, and similarly for the circle packing as well. I also create a grey hover over the bar graph that focuses on the specific bar locally.
+                  On the map, the areas of the city highlight based on the neighborhood as well with a border, diving the different parts of the city, so that your restaurant is easier to find.
+                  I also implemented cross interactivity in which the circle packing diagram, can highlight at the same time and so you can see the restaurants based on zip code in the highlight, and also, based on the type/cuisine for that specific zip code.
               </p2>
+
+            </p2>
+                  <h3>Findings</h3>
+
+                  <p2>
+                    There is a lot of findings that can be looked at here based on the data and there are a lot of trends due to the size of the data. We can start with overall trends from the map, in which the average rating of the restaurants decreases as the risk category increases, which was certain to be seen. We can also see that a lot of the food trucks tend to have a higher risk and health violations, especially in 53 restaurants in 94107 and that food trucks are the most popular in 94103 as well and that Mexican restaurants are the most prevalent in the mission and they mostly have 4-5 star yelp reviews, which makes it authentic. 94103 also has the lowest costs but also the average lowest health scores, with the highest range.
+                </p2>
 
 
         </div>
